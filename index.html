@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feira das Medidas — Matemática 5º ano</title>
+<style>
+:root{
+  --toldo:#e8505b; --toldo2:#c93a45; --creme:#fff7e6; --papel:#fffdf7;
+  --verde:#14a38b; --verde2:#0e7f6c; --uva:#7b4fd6; --uva2:#5d36b3;
+  --sol:#ffc93c; --tinta:#2d2a32; --cinza:#8a8590; --linha:#efe3c8;
+  --ok:#1fa45b; --erro:#e0453a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;background:var(--creme);color:var(--tinta);font-size:18px;line-height:1.5}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+.toldo{height:26px;background:repeating-linear-gradient(90deg,var(--toldo) 0 40px,#fff 40px 80px);}
+.toldo-borda{height:16px;background:radial-gradient(circle at 20px 0,var(--toldo) 0 18px,transparent 19px) 0 0/40px 16px repeat-x}
+header.topo{background:var(--papel);text-align:center;padding:14px 12px 8px}
+header.topo h1{margin:4px 0;font-size:1.7em;color:var(--toldo2)}
+header.topo p{margin:2px 0;color:var(--cinza);font-size:.9em}
+nav.abas{position:sticky;top:0;z-index:20;background:#fff;box-shadow:0 2px 8px #0001;display:flex;gap:6px;overflow-x:auto;padding:8px}
+nav.abas button{flex:0 0 auto;border:2px solid var(--linha);background:#fff;border-radius:14px;padding:8px 12px;font-weight:bold;color:var(--tinta);position:relative}
+nav.abas button.ativa{background:var(--toldo);border-color:var(--toldo2);color:#fff}
+nav.abas button.trancada{background:#eee;color:#999;border-color:#ddd}
+nav.abas button .selo{position:absolute;top:-8px;right:-6px;background:var(--sol);color:#5a3d00;border-radius:10px;font-size:.62em;padding:1px 6px}
+main{max-width:860px;margin:0 auto;padding:14px 12px 80px}
+section.aba{display:none}
+section.aba.ativa{display:block;animation:entra .35s ease}
+@keyframes entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{background:#fff;border-radius:18px;padding:16px 18px;margin:14px 0;box-shadow:0 3px 0 var(--linha),0 4px 14px #0000000d;border:2px solid var(--linha)}
+h2{color:var(--uva2);margin:.2em 0 .4em}
+h3{margin:.3em 0}
+.sub{color:var(--cinza);font-size:.88em}
+.btn{border:none;border-radius:14px;padding:10px 16px;font-weight:bold;color:#fff;background:var(--verde);box-shadow:0 3px 0 var(--verde2);margin:4px 2px}
+.btn:disabled{background:#c9c4cc;box-shadow:0 3px 0 #a9a3ad;cursor:not-allowed}
+.btn.uva{background:var(--uva);box-shadow:0 3px 0 var(--uva2)}
+.btn.toldo{background:var(--toldo);box-shadow:0 3px 0 var(--toldo2)}
+.btn.claro{background:#fff;color:var(--tinta);border:2px solid var(--linha);box-shadow:none}
+.trilha{display:grid;gap:10px}
+.etapa{display:flex;gap:12px;align-items:center;border-radius:16px;padding:12px 14px;border:2px solid var(--linha);background:#fff;text-align:left;width:100%;color:var(--tinta)}
+.etapa .ic{font-size:1.8em}
+.etapa.trancada{background:#f1f0f2;color:#8d8892;filter:grayscale(1)}
+.etapa.feita{border-color:var(--ok)}
+.etapa.nova{animation:brilho 1.4s ease 3;border-color:var(--sol)}
+@keyframes brilho{0%,100%{box-shadow:0 0 0 0 #ffc93c00}50%{box-shadow:0 0 0 8px #ffc93c88}}
+.tag{display:inline-block;border-radius:10px;padding:1px 8px;font-size:.75em;font-weight:bold;margin-left:4px}
+.tag.ok{background:#dff5e8;color:var(--ok)}
+.tag.novo{background:#fff1c2;color:#7a5600}
+.tag.lock{background:#e7e5ea;color:#6b6670}
+.barra{height:14px;background:#eee;border-radius:10px;overflow:hidden;margin:6px 0}
+.barra>div{height:100%;background:linear-gradient(90deg,var(--verde),var(--sol));width:0;transition:width .4s}
+.bloco{border-left:8px solid var(--c,var(--verde))}
+.bloco.fechado .corpo{display:none}
+.bloco .cab{display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:pointer}
+.bloco.trancado{opacity:.55}
+.caixa{background:#fff8e3;border:2px dashed var(--sol);border-radius:12px;padding:8px 12px;margin:10px 0;font-size:.92em}
+.conta{font-family:"Courier New",monospace;background:#f6fbff;border:2px solid #d8e9f7;border-radius:12px;padding:8px 14px;display:inline-block;font-size:1.05em;line-height:1.35;white-space:pre;margin:6px 0}
+.regra{background:#eef9f6;border:2px solid #bfe9df;border-radius:12px;padding:8px 12px;margin:8px 0}
+.pergunta{margin:14px 0 6px;padding-top:10px;border-top:2px dotted var(--linha)}
+.opcoes{display:grid;gap:6px}
+.op{text-align:left;border:2px solid var(--linha);background:#fff;border-radius:12px;padding:8px 12px;color:var(--tinta)}
+.op:hover:not(:disabled){border-color:var(--uva)}
+.op.certa{background:#e3f7ea;border-color:var(--ok);font-weight:bold}
+.op.errada{background:#fde6e4;border-color:var(--erro)}
+.op.cinza{background:#f2f1f3;color:#777}
+.op.sel{background:#efe8ff;border-color:var(--uva);font-weight:bold}
+.op:disabled{cursor:default}
+.fb{border-radius:12px;padding:8px 12px;margin-top:6px;font-size:.92em;animation:entra .3s}
+.fb.ok{background:#e3f7ea}
+.fb.no{background:#fff0e0}
+.estrelas{font-size:1.2em}
+/* mapa */
+.mapa{position:relative}
+.mapa .centro{background:var(--toldo);color:#fff;text-align:center;border-radius:50px;padding:14px;font-weight:bold;font-size:1.15em;margin:6px auto 14px;max-width:460px;box-shadow:0 4px 0 var(--toldo2)}
+.ramos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.ramo{border-radius:16px;padding:10px 12px;background:#fff;border:3px solid var(--c);transition:filter .6s}
+.ramo h4{margin:0 0 6px;color:var(--c)}
+.mapa.incompleto .ramo{filter:saturate(.25)}
+.mapa.completo .ramo{animation:revela .8s ease}
+@keyframes revela{from{transform:scale(.96)}to{transform:none}}
+.no{margin:6px 0;font-size:.95em}
+.lacuna{display:inline-flex;gap:4px;vertical-align:middle;flex-wrap:wrap}
+.lacuna button{border:2px dashed var(--uva);background:#f4efff;border-radius:10px;padding:2px 10px;font-weight:bold;color:var(--uva2)}
+.lacuna.feita span{display:inline-block;background:#e3f7ea;border:2px solid var(--ok);border-radius:10px;padding:2px 10px;font-weight:bold;color:var(--ok)}
+.lacuna button.erro{border-color:var(--erro);background:#fde6e4;color:var(--erro);animation:balanca .45s}
+@keyframes balanca{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.contador{position:sticky;top:58px;z-index:5;background:var(--uva);color:#fff;border-radius:14px;padding:8px 12px;text-align:center;font-weight:bold;margin:8px 0}
+/* vf */
+.vf-frase{font-size:1.2em;font-weight:bold;text-align:center;margin:14px 0;min-height:3em}
+.vf-bts{display:flex;gap:10px;justify-content:center}
+.vf-bts .btn{font-size:1.1em;padding:12px 22px}
+/* resumo */
+.tabela{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.col{border-radius:14px;padding:10px;border:2px solid var(--c);background:#fff}
+.col h4{margin:0 0 4px;color:var(--c);text-align:center}
+.col ul{margin:4px 0;padding-left:18px;font-size:.95em}
+.grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.palavra{background:#fff;border:2px solid var(--linha);border-radius:12px;padding:8px 10px;font-size:.92em}
+.palavra b{color:var(--uva2)}
+.postits{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.postit{background:#fff59a;padding:12px;border-radius:4px;box-shadow:2px 3px 6px #0002;transform:rotate(-1deg);font-size:.95em}
+.postit:nth-child(even){transform:rotate(1.2deg);background:#ffe0ef}
+.relampago button{width:100%;text-align:left}
+.resp-oculta{display:none;margin:4px 0 8px 10px;color:var(--verde2);font-weight:bold}
+/* modal */
+.fundo-modal{position:fixed;inset:0;background:#2d2a32cc;display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.fundo-modal.aberto{display:flex}
+.modal{background:#fff;border-radius:20px;max-width:440px;width:100%;padding:20px;text-align:center;animation:entra .3s}
+.painel-salvar{font-size:.85em;color:var(--cinza)}
+input.codigo{font-size:1em;padding:8px 10px;border-radius:12px;border:2px solid var(--linha);width:170px;text-transform:uppercase}
+table.rel{width:100%;border-collapse:collapse;font-size:.88em}
+table.rel td,table.rel th{border-bottom:1px solid #eee;padding:5px;text-align:left;vertical-align:top}
+.gab-q{border-top:2px dotted var(--linha);padding-top:8px;margin-top:10px}
+.gab-op{border-radius:10px;padding:5px 10px;margin:4px 0;font-size:.92em}
+.gab-op.certa{background:#e3f7ea;border:2px solid var(--ok)}
+.gab-op.cinza{background:#f2f1f3;color:#666}
+.gab-op.marcada{outline:3px solid var(--uva)}
+.placar-final{text-align:center;font-size:1.3em}
+.trofeu{font-size:3em}
+footer{text-align:center;color:var(--cinza);font-size:.85em;padding:20px}
+@media (max-width:520px){body{font-size:16.5px}header.topo h1{font-size:1.35em}}
+</style>
+</head>
+<body>
+<div class="toldo"></div><div class="toldo-borda"></div>
+<header class="topo">
+  <div style="font-size:2.2em">🧺🍉⚖️📏⏰</div>
+  <h1>Feira das Medidas</h1>
+  <p><b>Matemática · 5º ano</b> · Avaliação Mensal 2 · 3º trimestre</p>
+  <p>Unidade 8: multiplicação e divisão com decimais · Unidade 9: medidas</p>
+</header>
+<nav class="abas" id="abas"></nav>
+<main>
+
+<!-- ============ INÍCIO ============ -->
+<section class="aba" id="sec-inicio">
+  <div class="card">
+    <h2>👋 Bem-vindo à Feira, jovem aprendiz!</h2>
+    <p>Hoje você vai passear por uma feira de rua. Em cada barraca tem uma conta para fazer: pesar frutas, medir tecido, dividir a conta do lanche, olhar o relógio da praça… Tudo o que cai na prova está aqui.</p>
+  </div>
+  <div class="card">
+    <h2>📋 O que vai cair na prova</h2>
+    <ul>
+      <li><b>Unidade 8</b> – Multiplicação e divisão com números na forma decimal (livro p. 83 a 93)</li>
+      <li><b>Unidade 9</b> – Medidas de comprimento (p. 133 a 138), de massa (p. 139 a 141), de superfície/área (p. 142 a 144) e de tempo (p. 150 a 152)</li>
+      <li>⭐ <b>Estude a tabela de conversão impressa do colégio</b> — ela está inteirinha no Resumo.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>🛤️ Sua trilha</h2>
+    <p class="sub">Os materiais abrem um por vez, na ordem. Conclua um para destravar o próximo.</p>
+    <div class="trilha" id="trilhaCards"></div>
+  </div>
+  <div class="card">
+    <h2>🧭 Como usar</h2>
+    <ol>
+      <li>Os materiais abrem <b>um por vez, na ordem</b>. Conclua um para destravar o próximo.</li>
+      <li>Tenha <b>papel e lápis</b> do lado: arme as contas no caderno antes de clicar.</li>
+      <li>Errou? Tudo bem! Leia a explicação e siga em frente. Errar aqui é treino.</li>
+      <li>Depois de terminar tudo, os materiais ficam abertos para revisar quantas vezes quiser.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>💾 Seu progresso</h2>
+    <p class="painel-salvar" id="painelSalvar">Seu progresso é salvo sozinho neste aparelho.</p>
+    <button class="btn claro" id="btExportar">📥 Exportar</button>
+    <button class="btn claro" id="btImportar">📤 Importar</button>
+    <button class="btn claro" id="btZerar">🗑️ Zerar tudo</button>
+    <input type="file" id="arqImportar" accept=".json,application/json" style="display:none">
+  </div>
+  <div class="card">
+    <h2>📊 Relatório para os pais</h2>
+    <p class="sub">Digite o código do Simulado (SIM-…) ou o código da família.</p>
+    <input class="codigo" id="codPais" placeholder="Código" autocomplete="off">
+    <button class="btn uva" id="btRelatorio">Abrir</button>
+    <div id="areaPais"></div>
+    <p class="sub" style="margin-top:10px">💡 <b>Dica para os pais:</b> o progresso fica no navegador deste aparelho. Se trocar de aparelho, use 📥 Exportar / 📤 Importar ou libere a trilha com o código da família.</p>
+  </div>
+</section>
+
+<!-- ============ LEITURA ESTENDIDA ============ -->
+<section class="aba" id="sec-leitura">
+  <div class="card">
+    <h2>📖 Leitura Estendida — passeio pelas barracas</h2>
+    <p>Leia cada barraca com calma e responda as <b>3 perguntas</b> do fim. A próxima barraca abre quando você responder as 3. Tenha o caderno do lado para armar as contas!</p>
+    <div class="barra"><div id="barraLeitura"></div></div>
+    <p class="sub" id="txtLeitura"></p>
+  </div>
+  <div id="blocosLeitura"></div>
+  <div class="card" id="fimLeitura">
+    <h2>⚠️ Pegadinhas da feira</h2>
+    <ol>
+      <li>Na multiplicação, a vírgula do resultado não fica "no mesmo lugar": conte as <b>casas decimais</b> dos fatores.</li>
+      <li>25 ÷ 2 não precisa parar em "12 resto 1": troque o resto por <b>décimos</b> e continue → 12,5.</li>
+      <li>Resto 1 na divisão <b>não</b> vira ",1" no quociente.</li>
+      <li>Na divisão, a vírgula entra no quociente <b>na hora de dividir os décimos</b>.</li>
+      <li>Metro → centímetro é <b>× 100</b>, não × 10.</li>
+      <li>Centímetro → milímetro é <b>× 10</b>.</li>
+      <li>Quilômetro → metro e quilograma → grama são <b>× 1000</b>.</li>
+      <li>1 g = <b>1000</b> mg (não 100!).</li>
+      <li>Área de retângulo: <b>multiplica</b> comprimento por largura (somar dá outra coisa!). E a resposta vem em cm², m²…</li>
+      <li>Tempo conta de <b>60 em 60</b>: meia hora = 30 min, um quarto de hora = 15 min.</li>
+    </ol>
+    <h3>🗂️ Onde está cada assunto</h3>
+    <table class="rel">
+      <tr><th>Assunto da prova</th><th>Barraca</th></tr>
+      <tr><td>Multiplicação com decimais (p. 83–85)</td><td>1 · Barraca do Caixa</td></tr>
+      <tr><td>Divisão com quociente decimal (p. 86–90)</td><td>2 · Barraca da Partilha</td></tr>
+      <tr><td>Divisão com dividendo decimal (p. 91–93)</td><td>3 · Barraca do Lanche</td></tr>
+      <tr><td>Comprimento: m, cm, mm (p. 133–136)</td><td>4 · Barraca dos Tecidos</td></tr>
+      <tr><td>Comprimento: km e m (p. 136–138)</td><td>5 · Estrada da Feira</td></tr>
+      <tr><td>Massa: kg, g, mg e tonelada (p. 139–141 + tabela)</td><td>6 · Balança da Feira</td></tr>
+      <tr><td>Capacidade: L e ml (tabela do colégio)</td><td>7 · Barraca dos Sucos</td></tr>
+      <tr><td>Superfície/área (p. 142–144)</td><td>8 · Barraca dos Tapetes</td></tr>
+      <tr><td>Tempo: h, min, s, dia, semana, ano (p. 150–152 + tabela)</td><td>9 · Relógio da Praça</td></tr>
+      <tr><td>Tudo misturado</td><td>10 · Revisão geral</td></tr>
+    </table>
+  </div>
+  <div class="card" style="text-align:center">
+    <button class="btn toldo" data-proximo="mapa">🧠 Próximo: Mapa Mental para encaixar</button>
+  </div>
+</section>
+
+<!-- ============ MAPA MENTAL ============ -->
+<section class="aba" id="sec-mapa">
+  <div class="card">
+    <h2>🧠 Mapa Mental para encaixar</h2>
+    <p>O mapa da feira está com <b>peças faltando</b>. Em cada buraco, clique na palavra certa. Acertou? A peça fica verde. Errou? Ela balança e você tenta de novo.</p>
+  </div>
+  <div class="contador" id="contadorMapa">🧩 Mapa: 0 de 10 peças encaixadas</div>
+  <div class="mapa incompleto" id="mapa">
+    <div class="centro">🧺 Feira das Medidas<br><span style="font-weight:normal;font-size:.85em">números decimais e medidas</span></div>
+    <div class="ramos" id="ramosMapa"></div>
+  </div>
+  <div class="card" id="mapaFim" style="display:none;text-align:center">
+    <div class="trofeu">🧠</div>
+    <h2>Mapa completo!</h2>
+    <p>Foi você que montou esse mapa. Agora ele está inteiro e colorido!</p>
+  </div>
+  <div class="card" style="text-align:center">
+    <button class="btn toldo" data-proximo="vf">✅ Próximo: Verdadeiro ou Falso</button>
+  </div>
+</section>
+
+<!-- ============ VERDADEIRO OU FALSO ============ -->
+<section class="aba" id="sec-vf">
+  <div class="card" id="vfJogo"></div>
+  <div class="card" style="text-align:center">
+    <button class="btn toldo" data-proximo="resumo">🗺️ Próximo: Resumo</button>
+  </div>
+</section>
+
+<!-- ============ RESUMO ============ -->
+<section class="aba" id="sec-resumo">
+  <div class="card">
+    <h2>🗺️ Resumo da Feira</h2>
+    <p>Tudo o que cai na prova numa página só. Leia até o fim — lá embaixo tem um botão para marcar que você terminou.</p>
+  </div>
+
+  <div class="card">
+    <h2>🪜 Tabela de conversão do colégio</h2>
+    <p class="sub">É a tabela impressa "Grandezas e medidas – valores". Estude ela inteirinha!</p>
+    <div class="tabela">
+      <div class="col" style="--c:#e8505b"><h4>📏 COMPRIMENTO</h4>
+        <div>100 cm = 1 m<br>1000 m = 1 km<br>1 cm = 10 mm</div>
+        <b>Para transformar de:</b>
+        <ul><li>m → cm (× 100)</li><li>cm → m (÷ 100)</li><li>cm → mm (× 10)</li><li>mm → cm (÷ 10)</li><li>km → m (× 1000)</li><li>m → km (÷ 1000)</li></ul></div>
+      <div class="col" style="--c:#14a38b"><h4>⚖️ MASSA</h4>
+        <div>1000 g = 1 kg<br>1000 kg = 1 t<br>1 g = 1000 mg</div>
+        <b>Para transformar de:</b>
+        <ul><li>kg → g (× 1000)</li><li>g → kg (÷ 1000)</li><li>g → mg (× 1000)</li><li>mg → g (÷ 1000)</li></ul></div>
+      <div class="col" style="--c:#4aa3df"><h4>🧃 CAPACIDADE</h4>
+        <div>1000 ml = 1 L</div>
+        <b>Para transformar de:</b>
+        <ul><li>L → ml (× 1000)</li><li>ml → L (÷ 1000)</li></ul></div>
+      <div class="col" style="--c:#7b4fd6"><h4>⏰ TEMPO</h4>
+        <div>60 s = 1 min<br>60 min = 1 h<br>24 h = 1 dia<br>7 dias = 1 semana<br>12 meses = 1 ano</div>
+        <b>Para transformar de:</b>
+        <ul><li>h → min (× 60)</li><li>min → h (÷ 60)</li><li>min → s (× 60)</li><li>s → min (÷ 60)</li></ul></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🧮 Como fazer as contas</h2>
+    <div class="regra"><b>✖️ Multiplicação com decimal:</b> faça a conta sem a vírgula. Depois, o resultado (produto) ganha <b>tantas casas decimais quanto os fatores</b>.<br>
+      <span class="conta">  97,50   ← 2 casas decimais
+×     8
+ 780,00   ← 2 casas decimais</span></div>
+    <div class="regra"><b>➗ Divisão que "não acaba":</b> sobrou unidade? <b>Troque por 10 décimos</b>, coloque a <b>vírgula no quociente</b> e continue. Sobrou décimo? Troque por centésimos.<br>
+      <span class="conta">25 ÷ 2 = 12,5      17 ÷ 2 = 8,5</span></div>
+    <div class="regra"><b>➗ Divisão com decimal no dividendo:</b> divida <b>ordem por ordem, da esquerda para a direita</b>. Quando passar das unidades para os décimos, ponha a vírgula no quociente.<br>
+      <span class="conta">64,23 ÷ 3 = 21,41</span></div>
+    <div class="regra"><b>🟦 Área:</b> é contar quantos quadradinhos de 1 cm² cabem na figura. No retângulo: <b>comprimento × largura</b> (na mesma unidade).<br>
+      <span class="conta">8 m × 4,5 m = 36 m²</span></div>
+    <div class="regra"><b>⏰ Pedaços da hora:</b> 1 h = 60 min · ½ h = 30 min · ¼ h = 15 min.</div>
+  </div>
+
+  <div class="card">
+    <h2>🔤 Palavras importantes</h2>
+    <div class="grade">
+      <div class="palavra"><b>Fator</b> — cada número que está sendo multiplicado (em 8 × 97,50, os fatores são 8 e 97,50).</div>
+      <div class="palavra"><b>Produto</b> — o resultado da multiplicação.</div>
+      <div class="palavra"><b>Casas decimais</b> — os algarismos depois da vírgula. 97,50 tem 2.</div>
+      <div class="palavra"><b>Estimar</b> — calcular "mais ou menos", arredondando (97,50 ≈ 100).</div>
+      <div class="palavra"><b>Dividendo</b> — o número que está sendo dividido (em 64,23 ÷ 3, é 64,23).</div>
+      <div class="palavra"><b>Quociente</b> — o resultado da divisão.</div>
+      <div class="palavra"><b>Resto</b> — o que sobra na divisão.</div>
+      <div class="palavra"><b>Décimo / centésimo / milésimo</b> — 1 dividido em 10, em 100 e em 1000 partes iguais.</div>
+      <div class="palavra"><b>Milímetro (mm)</b> — a décima parte do centímetro.</div>
+      <div class="palavra"><b>Centímetro (cm)</b> — a centésima parte do metro.</div>
+      <div class="palavra"><b>Tonelada (t)</b> — 1000 quilogramas.</div>
+      <div class="palavra"><b>Área</b> — o tamanho de uma superfície; medida em cm², m² ou km².</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📌 Dicas de prova</h2>
+    <div class="postits">
+      <div class="postit">Olhe a tabela: de <b>m para cm</b> é × 100; de <b>cm para m</b> é ÷ 100. Cada ida tem a sua volta!</div>
+      <div class="postit">Multiplicou por 10, 100 ou 1000? O número ficou <b>maior</b>. Dividiu? Ficou <b>menor</b>. Confira se faz sentido.</div>
+      <div class="postit">Tempo é de <b>60 em 60</b>, não de 100! 150 s = 2,5 min = 2 min e 30 s.</div>
+      <div class="postit">Área de retângulo: <b>multiplica</b>. Somar os lados é outra coisa.</div>
+      <div class="postit">Faça uma <b>estimativa</b> antes: 8 × 97,50 é perto de 8 × 100 = 800.</div>
+      <div class="postit">1 kg = 1000 g e 1 g = 1000 mg. Massa é sempre de <b>1000</b>.</div>
+    </div>
+  </div>
+
+  <div class="card relampago">
+    <h2>⚡ Mini-quiz relâmpago</h2>
+    <p class="sub">Pense na resposta e clique para conferir.</p>
+    <div id="relampago"></div>
+  </div>
+
+  <div class="card" style="text-align:center" id="fimResumo">
+    <p>Chegou até aqui? Então marque:</p>
+    <button class="btn" id="btLiResumo" disabled>✅ Li o resumo até o fim</button>
+    <p class="sub" id="txtLiResumo">O botão acende quando você chegar ao fim da página.</p>
+    <button class="btn toldo" data-proximo="simulado">📝 Pronto para o Simulado!</button>
+  </div>
+</section>
+
+<!-- ============ SIMULADO ============ -->
+<section class="aba" id="sec-simulado">
+  <div class="card">
+    <h2>📝 Simulado da Feira</h2>
+    <p><b>25 questões</b>. Arme as contas no caderno, marque uma alternativa em cada questão e clique em <b>Enviar</b> no final. Depois aparecem sua nota, seu código e o gabarito comentado.</p>
+    <div class="barra"><div id="barraSim"></div></div>
+    <p class="sub" id="txtSim"></p>
+  </div>
+  <div id="questoesSim"></div>
+  <div class="card" style="text-align:center" id="envioSim">
+    <button class="btn toldo" id="btEnviarSim">📨 Enviar Simulado</button>
+  </div>
+  <div id="resultadoSim"></div>
+</section>
+
+</main>
+<footer>🧺 Feira das Medidas · Matemática 5º ano · conteúdo do livro Phases Matemática 5 – Livro 2 e da tabela de conversão do colégio</footer>
+
+<div class="fundo-modal" id="fundoModal"><div class="modal" id="modal"></div></div>
+<script>
+// ===================== DADOS (fonte: Phases Matemática 5 – Livro 2, p. 83–93, 133–144, 150–152; tabela de conversão impressa do colégio) =====================
+const BLOCOS = [
+{ id:'b1', emoji:'🧮', titulo:'Barraca do Caixa', tema:'Multiplicação com números na forma decimal', pag:'p. 83 a 85', cor:'#e8505b',
+  html:`<p>Na loja, uma poltrona azul custa <b>8 × R$ 97,50</b> (8 parcelas de R$ 97,50). Para saber o preço total, fazemos a multiplicação <b>8 × 97,50</b>.</p>
+<p><b>1º passo – estimar:</b> 97,50 reais é <i>aproximadamente</i> 100 reais, e 8 × 100 = 800. Então a poltrona custa <b>mais ou menos 800 reais</b>.</p>
+<p><b>2º passo – conta exata:</b> usamos o algoritmo usual da multiplicação. Fazemos a conta <b>como se não houvesse vírgula</b> e, no fim, colocamos a vírgula no resultado (o <b>produto</b>).</p>
+<span class="conta">    9 7 , 5 0  → duas casas decimais
+×           8
+  7 8 0 , 0 0  → duas casas decimais</span>
+<div class="regra">📌 <b>Regra:</b> o produto tem o <b>mesmo número de casas decimais</b> (números depois da vírgula) que os fatores. 97,50 tem 2 casas (5 décimos e 0 centésimos), então o produto também tem 2 casas: <b>R$ 780,00</b>.</div>
+<p>Outro exemplo: 6 × 15,7 → 6 × 157 = 942 → 15,7 tem <b>1</b> casa decimal → <b>94,2</b>.</p>`,
+  palavras:['fator','produto','casas decimais','estimar','algoritmo usual'],
+  qs:[
+   {q:'Quanto custa a poltrona de 8 × R$ 97,50?', o:[
+     {t:'R$ 780,00',ok:1,w:'Isso! 8 × 9750 = 78000 e, como 97,50 tem 2 casas decimais, o produto fica 780,00.'},
+     {t:'R$ 78,00',w:'A vírgula andou demais: o produto precisa de 2 casas decimais, igual a 97,50 → 780,00.'},
+     {t:'R$ 7 800,00',w:'Faltou colocar a vírgula com 2 casas decimais: o certo é 780,00.'},
+     {t:'R$ 800,00',w:'800 é só a estimativa (arredondando 97,50 para 100). O valor exato é 780,00.'}]},
+   {q:'O produto de 6 × 15,7 terá quantas casas decimais?', o:[
+     {t:'1 casa decimal',ok:1,w:'Certo! 15,7 tem 1 casa decimal, então o produto também: 94,2.'},
+     {t:'2 casas decimais',w:'Conte só as casas dos fatores: 6 não tem nenhuma e 15,7 tem 1. Total: 1 casa.'},
+     {t:'Nenhuma casa decimal',w:'15,7 tem um algarismo depois da vírgula, então o produto tem 1 casa: 94,2.'},
+     {t:'3 casas decimais',w:'Não. O número de casas do produto é igual ao dos fatores: 1 casa.'}]},
+   {q:'Um motorista pôs 9 L de gasolina a R$ 6,34 o litro. Quanto pagou?', o:[
+     {t:'R$ 57,06',ok:1,w:'Muito bem! 9 × 634 = 5706 e, com 2 casas decimais, R$ 57,06.'},
+     {t:'R$ 5,706',w:'Dinheiro com 3 casas não existe aqui: o produto tem 2 casas, como 6,34 → 57,06.'},
+     {t:'R$ 570,60',w:'A vírgula ficou no lugar errado. Estime: 9 × 6 = 54, então o valor é perto de 54 → 57,06.'},
+     {t:'R$ 54,06',w:'Faltou multiplicar os 34 centavos direito: 9 × 6,34 = 57,06.'}]}
+  ]},
+{ id:'b2', emoji:'🍰', titulo:'Barraca da Partilha', tema:'Divisão com quociente decimal', pag:'p. 86 a 90', cor:'#ff8a3d',
+  html:`<p>Na divisão <b>25 ÷ 2</b>, achamos <b>quociente 12</b> e <b>resto 1</b>. Mas dá para continuar! O quociente pode ser um <b>número na forma decimal</b>.</p>
+<span class="conta"> 2 5 | 2
+-2   +----
+ 0 5   1 2 ,
+  -4
+   1 0   ← trocamos 1 unidade por 10 décimos
+  -1 0
+     0</span>
+<div class="regra">📌 Como não dá para dividir 1 unidade por 2, <b>trocamos 1 unidade por 10 décimos</b> e continuamos. Colocamos uma <b>vírgula à direita do 2</b> no quociente, para mostrar que agora o resultado é em décimos. 10 décimos ÷ 2 = 5 décimos. Resultado: <b>25 ÷ 2 = 12,5</b> (ou 12,50 — é o mesmo número).</div>
+<p>Se sobrar décimo, trocamos por <b>centésimos</b>; se sobrar centésimo, trocamos por <b>milésimos</b>, e assim por diante.</p>
+<p><b>Exemplo da folha:</b> uma folha de 17 cm dividida ao meio. Pensamos: 17 = 16 + 1. 16 ÷ 2 = 8. A unidade que sobrou vira 10 décimos, e 10 décimos ÷ 2 = 5 décimos. Resposta: <b>8,5 cm</b>.</p>
+<p><b>Exemplo da balança:</b> 4 caixas iguais pesam 26 kg juntas → 26 ÷ 4 = 6 resto 2 → 2 unidades = 20 décimos → 20 ÷ 4 = 5 décimos → cada caixa tem <b>6,5 kg</b>.</p>`,
+  palavras:['quociente','resto','décimos','centésimos','milésimos'],
+  qs:[
+   {q:'Quanto é 25 ÷ 2, com quociente na forma decimal?', o:[
+     {t:'12,5',ok:1,w:'Isso! Sobra 1 unidade, que vira 10 décimos; 10 ÷ 2 = 5 décimos → 12,5.'},
+     {t:'12,1',w:'Pegadinha! O resto 1 não vira ",1". Ele vira 10 décimos, que divididos por 2 dão 5 → 12,5.'},
+     {t:'13',w:'Não arredonde: a conta continua nos décimos e dá exatamente 12,5.'},
+     {t:'1,25',w:'A vírgula ficou no lugar errado: 25 ÷ 2 é perto de 12, não de 1. Resposta: 12,5.'}]},
+   {q:'Na divisão, sobrou 1 unidade e quero continuar. Eu troco essa unidade por…', o:[
+     {t:'10 décimos',ok:1,w:'Certo! 1 unidade = 10 décimos. Aí dá para continuar dividindo.'},
+     {t:'10 centésimos',w:'1 unidade vale 100 centésimos, não 10. O livro troca 1 unidade por 10 décimos.'},
+     {t:'1 décimo',w:'1 unidade é bem mais que 1 décimo: vale 10 décimos.'},
+     {t:'100 décimos',w:'100 décimos seriam 10 unidades. 1 unidade = 10 décimos.'}]},
+   {q:'Quanto é 15 ÷ 2?', o:[
+     {t:'7,5',ok:1,w:'Muito bem! 14 ÷ 2 = 7, sobra 1 = 10 décimos, 10 ÷ 2 = 5 décimos → 7,5.'},
+     {t:'7,1',w:'O resto 1 não vira ",1": vira 10 décimos ÷ 2 = 5 décimos → 7,5.'},
+     {t:'7,05',w:'O 5 fica nos décimos (logo depois da vírgula), não nos centésimos: 7,5.'},
+     {t:'75',w:'Faltou a vírgula: 15 ÷ 2 é perto de 7, então é 7,5.'}]}
+  ]},
+{ id:'b3', emoji:'🧾', titulo:'Barraca do Lanche', tema:'Divisão com dividendo decimal', pag:'p. 91 a 93', cor:'#ffc93c',
+  html:`<p>Três amigas gastaram <b>R$ 64,23</b> no café e dividiram a conta igualmente. Quanto cada uma pagou? Fazemos <b>64,23 ÷ 3</b>.</p>
+<p>A divisão com decimais segue a <b>mesma lógica</b> da divisão com números naturais: é feita <b>ordem por ordem, da esquerda para a direita</b>.</p>
+<span class="conta">D U , d c | 3
+6 4 , 2 3 +-------
+-6          2 1 , 4 1
+ 0 4
+  -3
+   1 2   ← 1 unidade = 10 décimos + 2 décimos = 12 décimos
+  -1 2
+     0 3
+      -3
+       0</span>
+<div class="regra">📌 <b>Passo a passo:</b> 1) dezenas: 6 ÷ 3 = 2. 2) unidades: 4 ÷ 3 = 1, sobra 1. 3) a unidade que sobrou vira <b>10 décimos</b>, que se juntam aos <b>2 décimos</b> do dividendo: 12 décimos. Aqui colocamos a <b>vírgula no quociente</b>. 12 ÷ 3 = 4. 4) centésimos: 3 ÷ 3 = 1. Resultado: <b>R$ 21,41</b> para cada uma.</div>
+<p><b>Exemplo do bolo:</b> um bolo de <b>1,2 kg</b> é dividido em 8 fatias iguais. 1,2 kg = 1200 g, e 1200 ÷ 8 = <b>150 g</b> por fatia.</p>`,
+  palavras:['dividendo','ordem por ordem','vírgula no quociente'],
+  qs:[
+   {q:'R$ 64,23 divididos igualmente por 3 pessoas dá quanto para cada uma?', o:[
+     {t:'R$ 21,41',ok:1,w:'Isso! 6÷3=2, 4÷3=1 (sobra 1), 12 décimos ÷3=4, 3 centésimos ÷3=1 → 21,41.'},
+     {t:'R$ 2,141',w:'A vírgula fica depois das unidades do quociente: 21,41 (perto de 60 ÷ 3 = 20).'},
+     {t:'R$ 21,141',w:'Sobram algarismos: o quociente é 21,41. Confira: 21,41 × 3 = 64,23.'},
+     {t:'R$ 214,10',w:'Estime: 64 ÷ 3 é um pouco mais de 20. O certo é 21,41.'}]},
+   {q:'Em 64,23 ÷ 3, quando colocamos a vírgula no quociente?', o:[
+     {t:'Ao passar das unidades para os décimos',ok:1,w:'Certo! Quando começamos a dividir os décimos, a vírgula entra no quociente.'},
+     {t:'Só no fim, sempre com 2 casas',w:'Não é no fim: a vírgula entra quando começamos a dividir os décimos.'},
+     {t:'Antes de dividir as dezenas',w:'As dezenas e as unidades vêm antes da vírgula. Ela entra ao dividir os décimos.'},
+     {t:'Nunca, o quociente não tem vírgula',w:'Tem sim: 64,23 ÷ 3 = 21,41.'}]},
+   {q:'Quanto é 48,6 ÷ 3?', o:[
+     {t:'16,2',ok:1,w:'Muito bem! 4÷3=1 (sobra 1), 18÷3=6, 6 décimos ÷3=2 → 16,2.'},
+     {t:'1,62',w:'Estime: 48 ÷ 3 = 16, então o resultado é 16,2.'},
+     {t:'16,02',w:'O 2 é de décimos (6 décimos ÷ 3), então fica logo depois da vírgula: 16,2.'},
+     {t:'162',w:'Faltou a vírgula: o resultado é perto de 16, então 16,2.'}]}
+  ]},
+{ id:'b4', emoji:'📏', titulo:'Barraca dos Tecidos', tema:'Comprimento: metro, centímetro e milímetro', pag:'p. 133 a 136', cor:'#14a38b',
+  html:`<p>Já conhecemos o <b>quilômetro (km)</b>, o <b>metro (m)</b>, o <b>centímetro (cm)</b> e o <b>milímetro (mm)</b>. Agora vamos usar números decimais com eles.</p>
+<div class="regra">📌 <b>1 metro = 100 centímetros</b> (1 m = 100 cm).<br>1 metro dividido por 100 é 1 centímetro: <b>1/100 m = 0,01 m = 1 cm</b>.<br>
+➡️ <b>m → cm: multiplicar por 100</b> · <b>cm → m: dividir por 100</b></div>
+<p>Exemplos: 4 m = 400 cm · 280 cm = 2,8 m · 28 cm = 0,28 m · 0,98 m = 98 cm.</p>
+<div class="regra">📌 <b>1 centímetro = 10 milímetros</b> (1 cm = 10 mm).<br>1 centímetro dividido por 10 é 1 milímetro: <b>1/10 cm = 0,1 cm = 1 mm</b>.<br>
+➡️ <b>cm → mm: multiplicar por 10</b> · <b>mm → cm: dividir por 10</b></div>
+<p>Exemplos: 8 mm = 0,8 cm · 62 mm = 6,2 cm · 12 cm = 120 mm. Um segmento de 10 cm e 7 mm mede <b>10,7 cm</b>.</p>
+<div class="caixa">🔎 <b>Quem é parte de quem:</b> o <b>milímetro</b> é a <b>décima</b> parte do centímetro · o <b>centímetro</b> é a <b>centésima</b> parte do metro · o <b>milímetro</b> é a <b>milésima</b> parte do metro.</div>`,
+  palavras:['metro (m)','centímetro (cm)','milímetro (mm)','× 100 / ÷ 100','× 10 / ÷ 10'],
+  qs:[
+   {q:'280 cm são quantos metros?', o:[
+     {t:'2,8 m',ok:1,w:'Isso! cm → m divide por 100: 280 ÷ 100 = 2,8.'},
+     {t:'28 m',w:'Dividiu por 10. De cm para m é ÷ 100: 2,8 m.'},
+     {t:'28 000 m',w:'De cm para m o número fica menor (÷ 100): 2,8 m.'},
+     {t:'0,28 m',w:'Dividiu por 1000. O certo é ÷ 100: 2,8 m.'}]},
+   {q:'0,98 m são quantos centímetros?', o:[
+     {t:'98 cm',ok:1,w:'Certo! m → cm multiplica por 100: 0,98 × 100 = 98.'},
+     {t:'9,8 cm',w:'Multiplicou só por 10. De m para cm é × 100: 98 cm.'},
+     {t:'980 cm',w:'Multiplicou por 1000. De m para cm é × 100: 98 cm.'},
+     {t:'0,0098 cm',w:'De m para cm o número fica maior (× 100): 98 cm.'}]},
+   {q:'62 mm são quantos centímetros?', o:[
+     {t:'6,2 cm',ok:1,w:'Muito bem! mm → cm divide por 10: 62 ÷ 10 = 6,2.'},
+     {t:'620 cm',w:'Multiplicou em vez de dividir. mm → cm é ÷ 10: 6,2 cm.'},
+     {t:'0,62 cm',w:'Dividiu por 100. mm → cm é ÷ 10: 6,2 cm.'},
+     {t:'62 cm',w:'Precisa converter: 62 mm ÷ 10 = 6,2 cm.'}]}
+  ]},
+{ id:'b5', emoji:'🛣️', titulo:'Estrada da Feira', tema:'Comprimento: quilômetro e metro', pag:'p. 136 a 138', cor:'#4aa3df',
+  html:`<p>Para distâncias grandes, como de uma cidade até outra, usamos o <b>quilômetro</b>.</p>
+<div class="regra">📌 <b>1 quilômetro = 1000 metros</b> (1 km = 1000 m).<br>1 quilômetro dividido por 1000 é 1 metro: <b>1/1000 km = 0,001 km = 1 m</b>.<br>
+➡️ <b>km → m: multiplicar por 1000</b> · <b>m → km: dividir por 1000</b></div>
+<p>Exemplos: 1,8 km = 1800 m · 0,75 km = 750 m · 20 km = 20 000 m · 580 m = 0,58 km · 12 300 m = 12,3 km · 8 m = 0,008 km.</p>
+<div class="caixa">🏔️ <b>Curiosidade do livro:</b> o Monte Everest, na fronteira entre Nepal e Tibete, é o ponto mais alto da Terra, com altitude de aproximadamente <b>8,85 km</b>, isto é, <b>8850 m</b>.</div>`,
+  palavras:['quilômetro (km)','× 1000 / ÷ 1000'],
+  qs:[
+   {q:'1,8 km são quantos metros?', o:[
+     {t:'1800 m',ok:1,w:'Isso! km → m multiplica por 1000: 1,8 × 1000 = 1800.'},
+     {t:'180 m',w:'Multiplicou só por 100. km → m é × 1000: 1800 m.'},
+     {t:'18 m',w:'Multiplicou por 10. O certo é × 1000: 1800 m.'},
+     {t:'0,0018 m',w:'De km para m o número fica maior: 1800 m.'}]},
+   {q:'580 m são quantos quilômetros?', o:[
+     {t:'0,58 km',ok:1,w:'Certo! m → km divide por 1000: 580 ÷ 1000 = 0,58.'},
+     {t:'5,8 km',w:'Dividiu por 100. m → km é ÷ 1000: 0,58 km.'},
+     {t:'58 km',w:'Dividiu por 10. O certo é ÷ 1000: 0,58 km.'},
+     {t:'580 000 km',w:'De m para km o número fica menor: 0,58 km.'}]},
+   {q:'O Monte Everest tem cerca de 8,85 km de altitude. Quantos metros são?', o:[
+     {t:'8850 m',ok:1,w:'Muito bem! 8,85 × 1000 = 8850 m, como diz o livro.'},
+     {t:'885 m',w:'Multiplicou por 100. km → m é × 1000: 8850 m.'},
+     {t:'88,5 m',w:'Multiplicou por 10. O certo é × 1000: 8850 m.'},
+     {t:'88 500 m',w:'Multiplicou por 10 000. O certo é × 1000: 8850 m.'}]}
+  ]},
+{ id:'b6', emoji:'⚖️', titulo:'Balança da Feira', tema:'Massa: quilograma, grama, miligrama e tonelada', pag:'p. 139 a 141 + tabela', cor:'#7b4fd6',
+  html:`<p>Já estudamos o <b>quilograma (kg)</b>, o <b>grama (g)</b> e o <b>miligrama (mg)</b>. As medidas de massa também podem ser escritas com números decimais.</p>
+<div class="regra">📌 <b>1 quilograma = 1000 gramas</b> (1 kg = 1000 g).<br>1 quilograma dividido por 1000 é 1 grama: <b>1/1000 kg = 0,001 kg = 1 g</b>.<br>
+➡️ <b>kg → g: multiplicar por 1000</b> · <b>g → kg: dividir por 1000</b></div>
+<p>Exemplos: 10 kg = 10 000 g · 6000 g = 6 kg · 8,5 kg = 8500 g · 1200 g = 1,2 kg · 0,5 kg = 500 g · 250 g = 0,25 kg.</p>
+<div class="regra">📌 <b>1 grama = 1000 miligramas</b> (1 g = 1000 mg).<br>1 grama dividido por 1000 é 1 miligrama: <b>1/1000 g = 0,001 g = 1 mg</b>.<br>
+➡️ <b>g → mg: multiplicar por 1000</b> · <b>mg → g: dividir por 1000</b></div>
+<p>Exemplos: 4 g = 4000 mg · 3,5 g = 3500 mg · 17 350 mg = 17,35 g.</p>
+<div class="caixa">🚚 <b>E a tonelada?</b> Pela tabela do colégio: <b>1000 kg = 1 t</b> (uma tonelada).</div>`,
+  palavras:['quilograma (kg)','grama (g)','miligrama (mg)','tonelada (t)'],
+  qs:[
+   {q:'8,5 kg são quantos gramas?', o:[
+     {t:'8500 g',ok:1,w:'Isso! kg → g multiplica por 1000: 8,5 × 1000 = 8500.'},
+     {t:'850 g',w:'Multiplicou por 100. kg → g é × 1000: 8500 g.'},
+     {t:'85 g',w:'Multiplicou por 10. O certo é × 1000: 8500 g.'},
+     {t:'0,0085 g',w:'De kg para g o número fica maior: 8500 g.'}]},
+   {q:'1200 g de farinha são quantos quilogramas?', o:[
+     {t:'1,2 kg',ok:1,w:'Certo! g → kg divide por 1000: 1200 ÷ 1000 = 1,2.'},
+     {t:'12 kg',w:'Dividiu por 100. g → kg é ÷ 1000: 1,2 kg.'},
+     {t:'120 kg',w:'Dividiu por 10. O certo é ÷ 1000: 1,2 kg.'},
+     {t:'1,02 kg',w:'1200 ÷ 1000 = 1,2 (um quilo e duzentos gramas), não 1,02.'}]},
+   {q:'3,5 g são quantos miligramas?', o:[
+     {t:'3500 mg',ok:1,w:'Muito bem! g → mg multiplica por 1000: 3,5 × 1000 = 3500.'},
+     {t:'350 mg',w:'Pegadinha: 1 g = 1000 mg (não 100). 3,5 × 1000 = 3500 mg.'},
+     {t:'35 mg',w:'Multiplicou por 10. O certo é × 1000: 3500 mg.'},
+     {t:'0,0035 mg',w:'De g para mg o número fica maior: 3500 mg.'}]}
+  ]},
+{ id:'b7', emoji:'🧃', titulo:'Barraca dos Sucos', tema:'Capacidade: litro e mililitro', pag:'tabela de conversão do colégio', cor:'#2bb3c0',
+  html:`<p>A <b>capacidade</b> é quanto cabe dentro de um recipiente, como uma garrafa de suco. Ela está na <b>tabela de conversão impressa do colégio</b>.</p>
+<div class="regra">📌 <b>1000 ml = 1 L</b> (mil mililitros formam um litro).<br>
+➡️ <b>L → ml: multiplicar por 1000</b> · <b>ml → L: dividir por 1000</b></div>
+<p>Exemplos (é só aplicar a regra da tabela): 2 L = 2 × 1000 = <b>2000 ml</b> · 500 ml = 500 ÷ 1000 = <b>0,5 L</b> · 1,5 L = <b>1500 ml</b>.</p>
+<div class="caixa">💡 Repare: é a mesma ideia do kg e do g. Litro é a unidade grande; mililitro é a pequena.</div>`,
+  palavras:['litro (L)','mililitro (ml)','× 1000 / ÷ 1000'],
+  qs:[
+   {q:'2 L de suco são quantos mililitros?', o:[
+     {t:'2000 ml',ok:1,w:'Isso! L → ml multiplica por 1000: 2 × 1000 = 2000.'},
+     {t:'200 ml',w:'Multiplicou por 100. Pela tabela, L → ml é × 1000: 2000 ml.'},
+     {t:'20 ml',w:'Multiplicou por 10. O certo é × 1000: 2000 ml.'},
+     {t:'0,002 ml',w:'De L para ml o número fica maior: 2000 ml.'}]},
+   {q:'500 ml são quantos litros?', o:[
+     {t:'0,5 L',ok:1,w:'Certo! ml → L divide por 1000: 500 ÷ 1000 = 0,5 (meio litro).'},
+     {t:'5 L',w:'Dividiu por 100. ml → L é ÷ 1000: 0,5 L.'},
+     {t:'50 L',w:'Dividiu por 10. O certo é ÷ 1000: 0,5 L.'},
+     {t:'0,05 L',w:'Dividiu por 10 000. O certo é ÷ 1000: 0,5 L.'}]},
+   {q:'Para transformar mililitros em litros, eu…', o:[
+     {t:'divido por 1000',ok:1,w:'Muito bem! Na tabela: ml → L (÷ 1000).'},
+     {t:'multiplico por 1000',w:'Multiplicar por 1000 é o caminho de L para ml. De ml para L, divide.'},
+     {t:'divido por 100',w:'100 é o número do metro e do centímetro. Para capacidade é 1000.'},
+     {t:'multiplico por 60',w:'60 é do tempo. Capacidade usa 1000: ml → L divide por 1000.'}]}
+  ]},
+{ id:'b8', emoji:'🧺', titulo:'Barraca dos Tapetes', tema:'Medidas de superfície: área', pag:'p. 142 a 144', cor:'#d9488f',
+  html:`<p>Unidades de medida de superfície: <b>quilômetro quadrado (km²)</b>, <b>metro quadrado (m²)</b> e <b>centímetro quadrado (cm²)</b>.</p>
+<div class="regra">📌 Medir uma superfície em centímetros quadrados é o mesmo que <b>contar quantos quadrados de 1 cm² cabem</b> nela.</div>
+<span class="conta">┌───┬───┬───┬───┐
+│1cm²│   │   │   │
+├───┼───┼───┼───┤
+│   │   │   │   │
+└───┴───┴───┴───┘  8 quadradinhos = 8 cm²</span>
+<p>Uma figura feita de 8 quadradinhos de 1 cm² tem <b>área de 8 cm²</b>.</p>
+<div class="regra">📌 <b>Retângulo:</b> para achar a área, <b>multiplicamos o comprimento pela largura</b>, desde que as duas medidas estejam na <b>mesma unidade</b>.</div>
+<p><b>Exemplo do livro:</b> um salão retangular tem <b>8 m</b> de comprimento e <b>4,5 m</b> de largura.</p>
+<span class="conta">  4 , 5
+×     8
+ 3 6 , 0     área = 36,0 m²</span>
+<p>Outro exemplo: um retângulo de 4 cm por 2,5 cm tem área 4 × 2,5 = <b>10 cm²</b>.</p>`,
+  palavras:['área','cm²','m²','km²','comprimento × largura'],
+  qs:[
+   {q:'Uma figura é formada por 12 quadradinhos de 1 cm². Qual é a sua área?', o:[
+     {t:'12 cm²',ok:1,w:'Isso! Área = quantos quadradinhos de 1 cm² cabem: 12 cm².'},
+     {t:'12 cm',w:'Área se mede em unidades "quadradas": 12 cm² (e não cm).'},
+     {t:'24 cm²',w:'Basta contar os quadradinhos: são 12, então 12 cm².'},
+     {t:'6 cm²',w:'Cada quadradinho vale 1 cm²: 12 quadradinhos = 12 cm².'}]},
+   {q:'Um salão retangular mede 8 m por 4,5 m. Qual é a área?', o:[
+     {t:'36 m²',ok:1,w:'Certo! Área do retângulo = comprimento × largura: 8 × 4,5 = 36 m².'},
+     {t:'12,5 m²',w:'Você somou 8 + 4,5. Para área, multiplica: 8 × 4,5 = 36 m².'},
+     {t:'25 m²',w:'25 é a volta toda do salão (8 + 4,5 + 8 + 4,5). Área é 8 × 4,5 = 36 m².'},
+     {t:'3,6 m²',w:'A vírgula ficou errada: 4,5 tem 1 casa decimal e 8 × 45 = 360 → 36,0 m².'}]},
+   {q:'Um retângulo mede 4 cm por 2,5 cm. Qual é a área?', o:[
+     {t:'10 cm²',ok:1,w:'Muito bem! 4 × 2,5 = 10,0 → 10 cm².'},
+     {t:'6,5 cm²',w:'Você somou. Área de retângulo é multiplicação: 4 × 2,5 = 10 cm².'},
+     {t:'13 cm²',w:'13 é a soma dos 4 lados. Área: 4 × 2,5 = 10 cm².'},
+     {t:'100 cm²',w:'Faltou a vírgula: 4 × 25 = 100 → 1 casa decimal → 10,0 cm².'}]}
+  ]},
+{ id:'b9', emoji:'⏰', titulo:'Relógio da Praça', tema:'Medidas de tempo', pag:'p. 150 a 152 + tabela', cor:'#5b6cd9',
+  html:`<p>No dia a dia usamos <b>horas (h)</b>, <b>minutos (min)</b> e <b>segundos (s)</b>.</p>
+<div class="regra">📌 <b>1 hora = 60 minutos</b> (1 h = 60 min) · <b>meia hora = 30 min</b> (½ h = 30 min) · <b>um quarto de hora = 15 min</b> (¼ h = 15 min).<br>
+➡️ <b>h → min: multiplicar por 60</b> · <b>min → h: dividir por 60</b></div>
+<p>Exemplos: 2 h = 2 × 60 = 120 min · 1 h e ¼ de hora = 60 + 15 = 75 min · 2 h e ½ hora = 120 + 30 = 150 min.</p>
+<div class="regra">📌 <b>1 minuto = 60 segundos</b> (1 min = 60 s).<br>
+➡️ <b>min → s: multiplicar por 60</b> · <b>s → min: dividir por 60</b></div>
+<p>Exemplos: 3 min = 180 s · ½ min = 30 s · 240 s = 4 min · 150 s = 2,5 min. Uma prova de 5 horas tem 5 × 60 = <b>300 min</b>.</p>
+<div class="caixa">📅 <b>Da tabela do colégio:</b> 24 h = 1 dia · 7 dias = 1 semana · 12 meses = 1 ano.<br>
+🏠 <b>Família e Escola (livro):</b> a décima parte de um dia é 24 h ÷ 10 = 2,4 h. Muita gente responde "2 horas e 40 minutos", mas está errado! 0,4 h = 0,4 × 60 = 24 min → <b>2 h e 24 min</b>.</div>`,
+  palavras:['hora (h)','minuto (min)','segundo (s)','× 60 / ÷ 60'],
+  qs:[
+   {q:'1 hora e ¼ de hora são quantos minutos?', o:[
+     {t:'75 min',ok:1,w:'Isso! 1 h = 60 min e ¼ h = 15 min: 60 + 15 = 75.'},
+     {t:'125 min',w:'O tempo não é de 100 em 100: 1 h = 60 min. 60 + 15 = 75 min.'},
+     {t:'90 min',w:'90 seria 1 h e meia (60 + 30). ¼ de hora é 15 min → 75 min.'},
+     {t:'65 min',w:'¼ de hora não é 5 min: é 15 min. 60 + 15 = 75 min.'}]},
+   {q:'150 segundos são quantos minutos?', o:[
+     {t:'2,5 min',ok:1,w:'Certo! s → min divide por 60: 150 ÷ 60 = 2,5 (2 min e 30 s).'},
+     {t:'1,5 min',w:'Dividiu por 100. Tempo é de 60 em 60: 150 ÷ 60 = 2,5 min.'},
+     {t:'25 min',w:'Muito grande! 25 min = 1500 s. O certo é 150 ÷ 60 = 2,5 min.'},
+     {t:'9000 min',w:'Multiplicou em vez de dividir. s → min é ÷ 60: 2,5 min.'}]},
+   {q:'Uma prova dura 5 horas. Quantos minutos são?', o:[
+     {t:'300 min',ok:1,w:'Muito bem! h → min multiplica por 60: 5 × 60 = 300.'},
+     {t:'500 min',w:'1 h tem 60 min, não 100: 5 × 60 = 300 min.'},
+     {t:'50 min',w:'Multiplicou por 10. h → min é × 60: 300 min.'},
+     {t:'3000 min',w:'Sobrou um zero: 5 × 60 = 300 min.'}]}
+  ]},
+{ id:'b10', emoji:'🏁', titulo:'Revisão geral', tema:'Tudo misturado', pag:'Unidades 8 e 9', cor:'#e8505b',
+  html:`<p>Você passou por todas as barracas! Agora, uma volta rápida misturando tudo. Lembre:</p>
+<ul><li>Multiplicação: casas decimais do produto = casas decimais dos fatores.</li>
+<li>Divisão: sobrou? Troque por décimos e ponha a vírgula no quociente.</li>
+<li>Comprimento: 100 cm = 1 m · 1000 m = 1 km · 1 cm = 10 mm.</li>
+<li>Massa: 1000 g = 1 kg · 1000 kg = 1 t · 1 g = 1000 mg. Capacidade: 1000 ml = 1 L.</li>
+<li>Área: comprimento × largura. Tempo: de 60 em 60.</li></ul>`,
+  palavras:['revisão'],
+  qs:[
+   {q:'Para transformar quilômetros em metros, qual conta fazemos?', o:[
+     {t:'× 1000',ok:1,w:'Isso! Na tabela: km → m (× 1000).'},
+     {t:'÷ 1000',w:'÷ 1000 é o caminho de volta (m → km).'},
+     {t:'× 100',w:'× 100 é de metro para centímetro. km → m é × 1000.'},
+     {t:'÷ 100',w:'÷ 100 é de centímetro para metro. km → m é × 1000.'}]},
+   {q:'Quanto é 4 × 15,50?', o:[
+     {t:'62,00',ok:1,w:'Certo! 4 × 1550 = 6200 → 2 casas decimais → 62,00.'},
+     {t:'6,20',w:'Estime: 4 × 15 = 60. Então é 62,00, não 6,20.'},
+     {t:'620,0',w:'A vírgula precisa de 2 casas decimais (como 15,50): 62,00.'},
+     {t:'60,20',w:'4 × 0,50 = 2,00, que se soma a 60: 62,00.'}]},
+   {q:'Quanto tempo é a décima parte de um dia?', o:[
+     {t:'2 h e 24 min',ok:1,w:'Muito bem! 24 h ÷ 10 = 2,4 h, e 0,4 h × 60 = 24 min.'},
+     {t:'2 h e 40 min',w:'É o erro que o livro avisa! 0,4 h não é 40 min: 0,4 × 60 = 24 min.'},
+     {t:'2,4 min',w:'1 dia tem 24 horas: a décima parte é 2,4 HORAS = 2 h e 24 min.'},
+     {t:'10 h',w:'Décima parte é dividir por 10: 24 ÷ 10 = 2,4 h = 2 h e 24 min.'}]}
+  ]}
+];
+
+// ----- Mapa Mental: ramos e lacunas (a errada vem de outro ramo) -----
+const RAMOS = [
+ {nome:'✖️ Multiplicação', cor:'#e8505b', nos:[
+   'Primeiro estimo: 97,50 ≈ 100, e 8 × 100 = 800.',
+   ['O produto tem tantas casas decimais quanto os ', {id:'L1',certa:'fatores',errada:'quocientes'}, '.']]},
+ {nome:'➗ Divisão', cor:'#ff8a3d', nos:[
+   ['Sobrou 1 unidade? Troco por 10 ', {id:'L2',certa:'décimos',errada:'gramas'}, '.'],
+   ['A vírgula entra no ', {id:'L3',certa:'quociente',errada:'produto'}, ' quando começo a dividir os décimos.'],
+   'Divido ordem por ordem, da esquerda para a direita: 64,23 ÷ 3 = 21,41.']},
+ {nome:'📏 Comprimento', cor:'#14a38b', nos:[
+   ['1 m = ', {id:'L4',certa:'100',errada:'1000'}, ' cm  (m → cm × 100)'],
+   ['1 cm = ', {id:'L5',certa:'10',errada:'60'}, ' mm  (cm → mm × 10)'],
+   '1 km = 1000 m  (km → m × 1000)']},
+ {nome:'⚖️ Massa', cor:'#7b4fd6', nos:[
+   ['1 kg = ', {id:'L6',certa:'1000',errada:'100'}, ' g  (kg → g × 1000)'],
+   ['1000 kg = 1 ', {id:'L7',certa:'tonelada',errada:'quilômetro'}, ''],
+   '1 g = 1000 mg  (g → mg × 1000)']},
+ {nome:'🧃 Capacidade', cor:'#2bb3c0', nos:[
+   ['1 L = ', {id:'L8',certa:'1000',errada:'60'}, ' ml  (L → ml × 1000)']]},
+ {nome:'🧺 Área', cor:'#d9488f', nos:[
+   ['Área se mede em ', {id:'L9',certa:'cm²',errada:'cm'}, ', m² ou km².'],
+   'Retângulo: comprimento × largura. 8 m × 4,5 m = 36 m².']},
+ {nome:'⏰ Tempo', cor:'#5b6cd9', nos:[
+   ['1 h = ', {id:'L10',certa:'60',errada:'100'}, ' min  (h → min × 60)'],
+   '½ h = 30 min · ¼ h = 15 min · 1 min = 60 s',
+   '24 h = 1 dia · 7 dias = 1 semana · 12 meses = 1 ano']}
+];
+
+// ----- Verdadeiro ou Falso (banco de 24; sorteia 12) -----
+const VF = [
+ {f:'Em 8 × 97,50, o produto tem duas casas decimais: 780,00.', v:1, e:'Verdadeiro. 97,50 tem 2 casas decimais, então o produto também tem 2: 780,00.'},
+ {f:'Na multiplicação com decimais, a vírgula do produto fica sempre depois do primeiro algarismo.', v:0, e:'Falso. Contamos as casas decimais dos fatores: o produto tem a mesma quantidade.'},
+ {f:'97,50 é aproximadamente 100, então 8 × 97,50 dá perto de 800.', v:1, e:'Verdadeiro. É a estimativa do livro: 8 × 100 = 800.'},
+ {f:'25 ÷ 2 só pode ser respondido como "12, resto 1".', v:0, e:'Falso. Dá para continuar: o resto vira 10 décimos e o quociente fica 12,5.'},
+ {f:'12,5 e 12,50 representam o mesmo número.', v:1, e:'Verdadeiro. O zero nos centésimos não muda o valor.'},
+ {f:'Na divisão, quando sobra 1 unidade, podemos trocá-la por 10 décimos.', v:1, e:'Verdadeiro. 1 unidade = 10 décimos, e a divisão continua.'},
+ {f:'Na divisão 64,23 ÷ 3, começamos pelos centésimos, da direita para a esquerda.', v:0, e:'Falso. Dividimos ordem por ordem, da ESQUERDA para a direita, começando pelas dezenas.'},
+ {f:'64,23 ÷ 3 = 21,41.', v:1, e:'Verdadeiro. Confira: 21,41 × 3 = 64,23.'},
+ {f:'Para transformar metros em centímetros, dividimos por 100.', v:0, e:'Falso. m → cm MULTIPLICA por 100. Dividir por 100 é de cm para m.'},
+ {f:'28 cm é o mesmo que 0,28 m.', v:1, e:'Verdadeiro. cm → m divide por 100: 28 ÷ 100 = 0,28.'},
+ {f:'O milímetro é a décima parte do centímetro.', v:1, e:'Verdadeiro. 1 cm = 10 mm, então 1 mm = 0,1 cm.'},
+ {f:'O centímetro é a milésima parte do metro.', v:0, e:'Falso. O centímetro é a CENTÉSIMA parte do metro (1 m = 100 cm). A milésima parte é o milímetro.'},
+ {f:'Para transformar quilômetros em metros, multiplicamos por 1000.', v:1, e:'Verdadeiro. 1 km = 1000 m.'},
+ {f:'580 m é o mesmo que 5,8 km.', v:0, e:'Falso. m → km divide por 1000: 580 m = 0,58 km.'},
+ {f:'Se 1 kg = 1000 g, então 0,5 kg = 500 g.', v:1, e:'Verdadeiro. 0,5 × 1000 = 500 g.'},
+ {f:'1 grama é igual a 100 miligramas.', v:0, e:'Falso. 1 g = 1000 mg.'},
+ {f:'1000 kg formam 1 tonelada.', v:1, e:'Verdadeiro. Está na tabela do colégio: 1000 kg = 1 t.'},
+ {f:'1 L = 1000 ml, então 2 L = 2000 ml.', v:1, e:'Verdadeiro. L → ml multiplica por 1000.'},
+ {f:'Para achar a área de um retângulo, somamos o comprimento e a largura.', v:0, e:'Falso. MULTIPLICAMOS comprimento × largura.'},
+ {f:'Um salão de 8 m por 4,5 m tem 36 m² de área.', v:1, e:'Verdadeiro. 8 × 4,5 = 36 m², o exemplo do livro.'},
+ {f:'Meia hora tem 50 minutos.', v:0, e:'Falso. 1 h = 60 min, então meia hora = 30 min.'},
+ {f:'Para transformar horas em minutos, multiplicamos por 60.', v:1, e:'Verdadeiro. h → min (× 60).'},
+ {f:'150 segundos é o mesmo que 1,5 minuto.', v:0, e:'Falso. 150 ÷ 60 = 2,5 min (2 min e 30 s).'},
+ {f:'1 semana tem 7 dias e 1 ano tem 12 meses.', v:1, e:'Verdadeiro. Está na tabela de tempo do colégio.'}
+];
+
+// ----- Mini-quiz relâmpago do Resumo -----
+const RELAMPAGO = [
+ ['Quantas casas decimais tem o produto 2 × 1,547?', '3 casas: 3,094 (1,547 tem 3 casas).'],
+ ['Quanto é 17 ÷ 2?', '8,5'],
+ ['5,6 m em centímetros?', '560 cm (× 100)'],
+ ['12 300 m em quilômetros?', '12,3 km (÷ 1000)'],
+ ['9600 g em quilogramas?', '9,6 kg (÷ 1000)'],
+ ['3 horas em minutos?', '180 min (× 60)']
+];
+
+// ----- Simulado (25 questões) -----
+const SIM = [
+ {q:'Quanto é 2 × 4,7?', o:[['9,4',1,'2 × 47 = 94 e 4,7 tem 1 casa decimal → 9,4.'],['8,14','Não se multiplica parte inteira e decimal separadas assim: 2 × 4,7 = 9,4.'],['94','Faltou a vírgula (1 casa decimal): 9,4.'],['0,94','A vírgula andou demais: estime 2 × 5 = 10, então 9,4.']]},
+ {q:'Quanto é 5 × 12,3?', o:[['61,5',1,'5 × 123 = 615 → 1 casa decimal → 61,5.'],['60,15','5 × 0,3 = 1,5, que somado a 60 dá 61,5.'],['615','Faltou a vírgula: 61,5.'],['6,15','Estime: 5 × 12 = 60. O certo é 61,5.']]},
+ {q:'Um passageiro pega ônibus de segunda a sexta, para ir e voltar do trabalho. Cada passagem custa R$ 6,75. Quanto ele gasta por semana?', o:[['R$ 67,50',1,'São 5 dias × 2 viagens = 10 passagens: 10 × 6,75 = 67,50.'],['R$ 33,75','Esse é o gasto só da ida (5 passagens). Com ida e volta são 10: R$ 67,50.'],['R$ 13,50','Esse é o gasto de um dia só (2 passagens). Na semana: R$ 67,50.'],['R$ 47,25','Isso seriam 7 passagens. De segunda a sexta, ida e volta, são 10: R$ 67,50.']]},
+ {q:'Quanto é 5 × 49,62?', o:[['248,10',1,'5 × 4962 = 24810 → 2 casas decimais → 248,10.'],['24,810','A vírgula andou demais: estime 5 × 50 = 250. O certo é 248,10.'],['2481,0','Faltou uma casa decimal: são 2 casas → 248,10.'],['245,10','Erro de conta: 5 × 0,62 = 3,10, que somado a 245 dá 248,10.']]},
+ {q:'Para estimar 6 × 19,90, arredondamos 19,90 para 20. O resultado aproximado é:', o:[['120',1,'6 × 20 = 120. É a estimativa, como no livro (97,50 ≈ 100).'],['114','114 não vem do arredondamento para 20: 6 × 20 = 120.'],['1200','Sobrou um zero: 6 × 20 = 120.'],['60','6 × 10 = 60. Mas arredondamos para 20: 6 × 20 = 120.']]},
+ {q:'Quanto é 322 ÷ 5, com quociente na forma decimal?', o:[['64,4',1,'322 ÷ 5 = 64, sobra 2; 2 unidades = 20 décimos; 20 ÷ 5 = 4 → 64,4.'],['64,2','O resto 2 não vira ",2": vira 20 décimos ÷ 5 = 4 décimos → 64,4.'],['644','Faltou a vírgula: 64,4.'],['6,44','Estime: 300 ÷ 5 = 60. O certo é 64,4.']]},
+ {q:'Quanto é 203 ÷ 4?', o:[['50,75',1,'203 ÷ 4 = 50, sobra 3 → 30 décimos ÷ 4 = 7, sobra 2 → 20 centésimos ÷ 4 = 5 → 50,75.'],['50,3','O resto 3 não vira ",3": continua a divisão nos décimos e centésimos → 50,75.'],['5,075','Estime: 200 ÷ 4 = 50. O certo é 50,75.'],['507,5','A vírgula ficou no lugar errado: 50,75.']]},
+ {q:'Quatro caixas iguais pesam juntas 26 kg. Qual é a massa de cada caixa?', o:[['6,5 kg',1,'26 ÷ 4 = 6, sobra 2 → 20 décimos ÷ 4 = 5 → 6,5 kg.'],['6,2 kg','O resto 2 vira 20 décimos, e 20 ÷ 4 = 5 → 6,5 kg.'],['6 kg','Não pare no resto: continue nos décimos → 6,5 kg.'],['104 kg','104 é 26 × 4. Para achar cada caixa, divide: 26 ÷ 4 = 6,5 kg.']]},
+ {q:'Quanto é 72,88 ÷ 4?', o:[['18,22',1,'7÷4=1 (sobra 3), 32÷4=8, 8 décimos ÷4=2, 8 centésimos ÷4=2 → 18,22.'],['1,822','Estime: 72 ÷ 4 = 18. O certo é 18,22.'],['18,02','8 décimos ÷ 4 = 2 décimos (não zero) → 18,22.'],['182,2','A vírgula ficou no lugar errado: 18,22.']]},
+ {q:'Quanto é 68,76 ÷ 6?', o:[['11,46',1,'6÷6=1, 8÷6=1 (sobra 2), 27 décimos ÷6=4 (sobra 3), 36 centésimos ÷6=6 → 11,46.'],['1,146','Estime: 66 ÷ 6 = 11. O certo é 11,46.'],['11,406','Sobrou um zero: 11,46.'],['114,6','A vírgula ficou no lugar errado: 11,46.']]},
+ {q:'Um bolo de 1,2 kg é dividido em 8 fatias iguais. Quantos gramas tem cada fatia?', o:[['150 g',1,'1,2 kg = 1200 g e 1200 ÷ 8 = 150 g.'],['15 g','1,2 kg são 1200 g (não 120): 1200 ÷ 8 = 150 g.'],['1,5 g','Faltou transformar kg em g (× 1000): 1200 ÷ 8 = 150 g.'],['1500 g','1500 g é mais que o bolo inteiro! 1200 ÷ 8 = 150 g.']]},
+ {q:'4 m são quantos centímetros?', o:[['400 cm',1,'m → cm multiplica por 100: 4 × 100 = 400.'],['40 cm','Multiplicou por 10. m → cm é × 100.'],['4000 cm','Multiplicou por 1000. m → cm é × 100.'],['0,04 cm','Dividiu em vez de multiplicar. m → cm é × 100.']]},
+ {q:'Um quadro mede 140 cm, uma mesa mede 75 cm e um armário mede 210 cm de altura. Em metros, as alturas são:', o:[['1,40 m; 0,75 m; 2,10 m',1,'cm → m divide por 100: 140 ÷ 100 = 1,40; 75 ÷ 100 = 0,75; 210 ÷ 100 = 2,10.'],['14 m; 7,5 m; 21 m','Dividiu por 10. cm → m é ÷ 100.'],['0,14 m; 0,075 m; 0,21 m','Dividiu por 1000. cm → m é ÷ 100.'],['140 m; 75 m; 210 m','Não transformou: cm → m divide por 100.']]},
+ {q:'15,44 cm são quantos milímetros?', o:[['154,4 mm',1,'cm → mm multiplica por 10: 15,44 × 10 = 154,4.'],['1,544 mm','Dividiu em vez de multiplicar. cm → mm é × 10.'],['1544 mm','Multiplicou por 100. cm → mm é × 10.'],['15,44 mm','Não transformou: cm → mm é × 10 → 154,4 mm.']]},
+ {q:'Um segmento mede 10 cm e 7 mm. Qual é a medida dele em centímetros?', o:[['10,7 cm',1,'7 mm = 0,7 cm (÷ 10). 10 + 0,7 = 10,7 cm.'],['17 cm','Não dá para somar cm com mm direto: 7 mm = 0,7 cm → 10,7 cm.'],['107 cm','107 cm passa de 1 metro! O certo é 10,7 cm.'],['10,07 cm','7 mm é 7 décimos de centímetro (0,7), não 7 centésimos → 10,7 cm.']]},
+ {q:'12 300 m são quantos quilômetros?', o:[['12,3 km',1,'m → km divide por 1000: 12 300 ÷ 1000 = 12,3.'],['123 km','Dividiu por 100. m → km é ÷ 1000.'],['1,23 km','Dividiu por 10 000. m → km é ÷ 1000.'],['12 300 000 km','Multiplicou em vez de dividir. m → km é ÷ 1000.']]},
+ {q:'8 m correspondem a quantos quilômetros?', o:[['0,008 km',1,'m → km divide por 1000: 8 ÷ 1000 = 0,008.'],['0,08 km','Dividiu por 100. m → km é ÷ 1000.'],['0,8 km','Dividiu por 10. m → km é ÷ 1000.'],['8000 km','Multiplicou em vez de dividir.']]},
+ {q:'Um pedreiro comprou um pacote de 8 kg de massa corrida, e na embalagem estava escrito "8000 gramas". Depois comprou um pacote de 4 kg. O que estava escrito na nova embalagem?', o:[['4000 gramas',1,'kg → g multiplica por 1000: 4 × 1000 = 4000 g.'],['400 gramas','Multiplicou por 100. kg → g é × 1000.'],['12 000 gramas','12 000 g é o total dos dois pacotes. A nova embalagem tem 4 kg = 4000 g.'],['40 gramas','Multiplicou por 10. kg → g é × 1000.']]},
+ {q:'Uma receita usa 1,75 kg de leite em pó. Quantos gramas são?', o:[['1750 g',1,'kg → g multiplica por 1000: 1,75 × 1000 = 1750.'],['175 g','Multiplicou por 100. kg → g é × 1000.'],['17 500 g','Multiplicou por 10 000. kg → g é × 1000.'],['1075 g','Os algarismos são 1, 7 e 5 nessa ordem: 1,75 × 1000 = 1750 g.']]},
+ {q:'17 350 mg são quantos gramas?', o:[['17,35 g',1,'mg → g divide por 1000: 17 350 ÷ 1000 = 17,35.'],['173,5 g','Dividiu por 100. Lembre: 1 g = 1000 mg.'],['1,735 g','Dividiu por 10 000. mg → g é ÷ 1000.'],['17 350 000 g','Multiplicou em vez de dividir.']]},
+ {q:'Uma garrafa de suco tem 1,5 L. Quantos mililitros são?', o:[['1500 ml',1,'L → ml multiplica por 1000: 1,5 × 1000 = 1500.'],['150 ml','Multiplicou por 100. Pela tabela, L → ml é × 1000.'],['15 ml','Multiplicou por 10. L → ml é × 1000.'],['15 000 ml','Multiplicou por 10 000. L → ml é × 1000.']]},
+ {q:'Um retângulo mede 3 cm por 1,5 cm. Qual é a sua área?', o:[['4,5 cm²',1,'Área = comprimento × largura: 3 × 1,5 = 4,5 cm².'],['4,5 cm','A conta está certa, mas área se mede em cm² (centímetros quadrados).'],['9 cm²','9 é a volta toda do retângulo (3 + 1,5 + 3 + 1,5). Área é 3 × 1,5 = 4,5 cm².'],['45 cm²','Faltou a vírgula: 3 × 1,5 = 4,5 cm².']]},
+ {q:'2 horas e ½ de hora correspondem a quantos minutos?', o:[['150 min',1,'2 h = 120 min e ½ h = 30 min: 120 + 30 = 150.'],['130 min','½ hora não é 10 min: é 30 min. 120 + 30 = 150.'],['250 min','Hora não tem 100 minutos: tem 60. 120 + 30 = 150 min.'],['90 min','90 min é só 1 h e meia. Aqui são 2 h e meia: 150 min.']]},
+ {q:'240 segundos são quantos minutos?', o:[['4 min',1,'s → min divide por 60: 240 ÷ 60 = 4.'],['24 min','Dividiu por 10. s → min é ÷ 60.'],['2,4 min','Dividiu por 100. Tempo é de 60 em 60: 240 ÷ 60 = 4 min.'],['14 400 min','Multiplicou em vez de dividir.']]},
+ {q:'Uma prova tem duração de 5 horas. Quantos segundos tem essa prova?', o:[['18 000 s',1,'5 h = 300 min (× 60) e 300 min = 18 000 s (× 60).'],['300 s','300 são os minutos. Ainda falta passar para segundos: 300 × 60 = 18 000 s.'],['3000 s','Faltou multiplicar por 60 de novo: 300 min × 60 = 18 000 s.'],['1800 s','1800 s é só meia hora. 5 h = 18 000 s.']]}
+];
+
+// ===================== LÓGICA =====================
+const SLUG = 'mat5feira';
+const SEED_LEIT = 11, SEED_SIM = 7, SEED_MAPA = 3;
+const K = { leitura:SLUG+'_leitura_v1', mapa:SLUG+'_mapa_v1', vf:SLUG+'_vf_v1', resumo:SLUG+'_resumo_v1', simulado:SLUG+'_simulado_v1', trilha:SLUG+'_trilha_v1' };
+const CODIGO_PAIS = 'PAIS-77';
+const MEM = {};
+function ler(k){ try{ const v = localStorage.getItem(k); if(v!==null) return JSON.parse(v); }catch(e){} return MEM[k] ? JSON.parse(MEM[k]) : null; }
+function gravar(k,o){ const s = JSON.stringify(o); MEM[k] = s; try{ localStorage.setItem(k,s); }catch(e){} }
+function apagar(k){ delete MEM[k]; try{ localStorage.removeItem(k); }catch(e){} }
+
+let S = {};
+function carregar(){
+  S.leitura  = ler(K.leitura)  || {resp:{}, concluido:false};
+  S.mapa     = ler(K.mapa)     || {pecas:{}, concluido:false};
+  S.vf       = ler(K.vf)       || {melhor:null, rodadas:0, historico:[], concluido:false};
+  S.resumo   = ler(K.resumo)   || {maxRolagem:0, concluido:false};
+  S.simulado = ler(K.simulado) || {resp:{}, enviado:false, concluido:false};
+  S.trilha   = ler(K.trilha)   || {liberadoPelosPais:false, liberadoEm:null, vistos:{}, historico:[]};
+  if(!S.trilha.vistos) S.trilha.vistos = {};
+  if(!S.trilha.historico) S.trilha.historico = [];
+}
+function salvar(nome){ S[nome].salvoEm = new Date().toISOString(); gravar(K[nome], S[nome]); atualizarPainel(); renderTrilha(); }
+function concluir(nome){ if(!S[nome].concluido){ S[nome].concluido = true; S[nome].concluidoEm = new Date().toISOString(); } }
+
+// ---------- utilidades ----------
+function hashStr(s){ let h = 2166136261; for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h,16777619); } return h>>>0; }
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function embaralhar(arr, seed){ const r = mulberry32(seed); const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function dataBR(iso){ if(!iso) return '—'; const d=new Date(iso); const p=n=>String(n).padStart(2,'0'); return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`; }
+const $ = id => document.getElementById(id);
+const LETRAS = ['a','b','c','d'];
+
+// ---------- modal ----------
+function abrirModal(html, botoes){
+  const m = $('modal'); m.innerHTML = html + '<div style="margin-top:14px" id="modalBts"></div>';
+  (botoes||[{t:'OK', cls:'btn'}]).forEach(b=>{ const el=document.createElement('button'); el.className=b.cls||'btn'; el.textContent=b.t; el.onclick=()=>{ fecharModal(); if(b.fn) b.fn(); }; $('modalBts').appendChild(el); });
+  $('fundoModal').classList.add('aberto');
+}
+function fecharModal(){ $('fundoModal').classList.remove('aberto'); }
+
+// ---------- trilha ----------
+const ETAPAS = [
+  {id:'leitura', nome:'Leitura Estendida', ic:'📖'},
+  {id:'mapa', nome:'Mapa Mental para encaixar', ic:'🧠'},
+  {id:'vf', nome:'Verdadeiro ou Falso', ic:'✅'},
+  {id:'resumo', nome:'Resumo', ic:'🗺️'},
+  {id:'simulado', nome:'Simulado', ic:'📝'}
+];
+const idxEtapa = id => ETAPAS.findIndex(e=>e.id===id);
+function feito(id){ return !!(S[id] && S[id].concluido); }
+function aberta(i){ if(i<=0) return true; if(S.trilha.liberadoPelosPais) return true; return feito(ETAPAS[i-1].id) || feito(ETAPAS[i].id); }
+const TOTAL_PERG = BLOCOS.reduce((s,b)=>s+b.qs.length,0);
+function blocoFeito(b){ return b.qs.every((q,qi)=>S.leitura.resp[b.id+'_'+qi]); }
+function blocosFeitos(){ return BLOCOS.filter(blocoFeito).length; }
+const PECAS = []; RAMOS.forEach(r=>r.nos.forEach(n=>{ if(Array.isArray(n)) n.forEach(p=>{ if(typeof p==='object') PECAS.push(p); }); }));
+const TOTAL_PECAS = PECAS.length;
+function pecasFeitas(){ return PECAS.filter(p=>S.mapa.pecas[p.id] && S.mapa.pecas[p.id].feita).length; }
+function faltaTexto(i){
+  const ant = ETAPAS[i-1].id;
+  if(ant==='leitura') return `Destrava quando você terminar as ${BLOCOS.length} barracas da Leitura Estendida (faltam ${BLOCOS.length-blocosFeitos()}).`;
+  if(ant==='mapa') return `Destrava quando você encaixar as ${TOTAL_PECAS} peças do Mapa Mental (faltam ${TOTAL_PECAS-pecasFeitas()}).`;
+  if(ant==='vf') return 'Destrava quando você jogar uma rodada completa (12 frases) do Verdadeiro ou Falso.';
+  if(ant==='resumo') return 'Destrava quando você ler o Resumo até o fim e clicar em "✅ Li o resumo até o fim".';
+  return '';
+}
+function ehNova(i){ return i>0 && aberta(i) && !feito(ETAPAS[i].id) && !S.trilha.vistos[ETAPAS[i].id]; }
+
+let abaAtual = 'inicio';
+function renderAbas(){
+  const nav = $('abas'); nav.innerHTML = '';
+  const todas = [{id:'inicio', nome:'Início', ic:'🏠'}].concat(ETAPAS);
+  todas.forEach(a=>{
+    const i = idxEtapa(a.id); const b = document.createElement('button');
+    b.innerHTML = `${a.ic} ${a.nome}`;
+    if(a.id===abaAtual) b.classList.add('ativa');
+    if(i>=0 && !aberta(i)){ b.classList.add('trancada'); b.innerHTML = `🔒 ${a.nome}`; b.title = faltaTexto(i); }
+    else if(i>=0 && feito(a.id)) b.innerHTML += ' <span class="selo">✅</span>';
+    else if(i>=0 && ehNova(i)) b.innerHTML += ' <span class="selo">✨ Novo</span>';
+    b.onclick = ()=>ir(a.id);
+    nav.appendChild(b);
+  });
+}
+function renderTrilha(){
+  const box = $('trilhaCards'); if(!box) return; box.innerHTML = '';
+  if(S.trilha.liberadoPelosPais){ const s=document.createElement('div'); s.className='caixa'; s.innerHTML='🔓 <b>Trilha liberada pelos pais</b> em '+dataBR(S.trilha.liberadoEm); box.appendChild(s); }
+  ETAPAS.forEach((e,i)=>{
+    const b = document.createElement('button'); b.className='etapa';
+    let status;
+    if(!aberta(i)){ b.classList.add('trancada'); status = `<span class="tag lock">🔒 Trancado</span><div class="sub">${faltaTexto(i)}</div>`; }
+    else if(feito(e.id)){ b.classList.add('feita'); status = `<span class="tag ok">✅ Concluído</span><div class="sub">em ${dataBR(S[e.id].concluidoEm)}</div>`; }
+    else if(ehNova(i)){ b.classList.add('nova'); status = `<span class="tag novo">✨ Novo destravado</span>`; }
+    else status = `<span class="sub">${i===0?'Comece por aqui!':'Aberto'}</span>`;
+    b.innerHTML = `<span class="ic">${e.ic}</span><span><b>${i+1}. ${e.nome}</b> ${status}</span>`;
+    b.onclick = ()=>ir(e.id);
+    box.appendChild(b);
+  });
+  renderAbas(); renderProximos();
+}
+function renderProximos(){
+  document.querySelectorAll('[data-proximo]').forEach(bt=>{
+    const i = idxEtapa(bt.dataset.proximo);
+    const ok = aberta(i);
+    bt.disabled = !ok;
+    if(!bt.dataset.rotulo) bt.dataset.rotulo = bt.textContent;
+    bt.textContent = ok ? bt.dataset.rotulo : '🔒 ' + bt.dataset.rotulo.replace(/^\S+\s/,'');
+    bt.title = ok ? '' : faltaTexto(i);
+    bt.onclick = ()=>ir(bt.dataset.proximo);
+  });
+}
+function modalTrancada(i){
+  abrirModal(`<div class="trofeu">🔒</div><h2>Esta etapa ainda está trancada</h2><p>Para abrir <b>${ETAPAS[i].nome}</b>, conclua antes <b>${ETAPAS[i-1].nome}</b>.</p><p>${faltaTexto(i)}</p>`,
+    [{t:'Ir para '+ETAPAS[i-1].nome, cls:'btn', fn:()=>ir(ETAPAS[i-1].id)},{t:'Voltar ao início', cls:'btn claro', fn:()=>ir('inicio')}]);
+}
+function ir(id){
+  const i = idxEtapa(id);
+  if(id!=='inicio' && i<0) id='inicio';
+  if(i>=0 && !aberta(i)){ modalTrancada(i); return; }
+  abaAtual = id;
+  document.querySelectorAll('section.aba').forEach(s=>s.classList.toggle('ativa', s.id==='sec-'+id));
+  if(i>=0 && !S.trilha.vistos[id]){ S.trilha.vistos[id] = new Date().toISOString(); gravar(K.trilha, S.trilha); }
+  renderTrilha();
+  window.scrollTo(0,0);
+  if(id==='resumo') setTimeout(medirRolagem, 300);
+}
+
+// ---------- LEITURA ----------
+const fechados = {};
+function opcoesDe(q, seed){ return embaralhar(q.o.map((o,k)=>Object.assign({k}, o)), seed); }
+function renderLeitura(){
+  const box = $('blocosLeitura'); box.innerHTML = '';
+  let anteriorFeito = true;
+  BLOCOS.forEach((b,j)=>{
+    const liberado = anteriorFeito; const completo = blocoFeito(b);
+    const d = document.createElement('div');
+    d.className = 'card bloco' + (liberado?'':' trancado') + (fechados[b.id]?' fechado':'');
+    d.style.setProperty('--c', b.cor); d.id = 'bloco-'+b.id;
+    let cab = `<div class="cab"><div><h2 style="color:${b.cor}">${b.emoji} ${j+1}. ${b.titulo}</h2><div class="sub">${b.tema} · ${b.pag}</div></div><div>${completo?'<span class="tag ok">✅ feito</span>':(liberado?'':'<span class="tag lock">🔒</span>')}</div></div>`;
+    if(!liberado){ d.innerHTML = cab + `<p class="sub">🔒 Abre quando você responder as 3 perguntas da barraca ${j}.</p>`; box.appendChild(d); anteriorFeito=false; return; }
+    let corpo = `<div class="corpo">${b.html}<div class="caixa">🔑 <b>Palavras importantes:</b> ${b.palavras.join(' · ')}</div><h3>🎯 Responda as 3 perguntas</h3>`;
+    b.qs.forEach((q,qi)=>{
+      const qid = b.id+'_'+qi; const r = S.leitura.resp[qid];
+      const ops = opcoesDe(q, hashStr(qid)+SEED_LEIT);
+      corpo += `<div class="pergunta"><b>${qi+1}) ${q.q}</b><div class="opcoes">`;
+      ops.forEach((o,pi)=>{
+        let cls = 'op';
+        if(r){ if(o.ok) cls+=' certa'; else if(o.k===r.esc) cls+=' errada'; else cls+=' cinza'; }
+        corpo += `<button class="${cls}" ${r?'disabled':''} data-q="${qid}" data-k="${o.k}">${LETRAS[pi]}) ${o.t}</button>`;
+      });
+      corpo += `</div>`;
+      if(r){ const esc = q.o[r.esc]; const certa = q.o.find(o=>o.ok);
+        corpo += r.ok ? `<div class="fb ok">🎉 ${esc.w}</div>` : `<div class="fb no">💭 Quase! ${esc.w}<br>✔️ <b>Resposta certa:</b> ${certa.t} — ${certa.w}</div>`; }
+      corpo += `</div>`;
+    });
+    corpo += `</div>`;
+    d.innerHTML = cab + corpo; box.appendChild(d);
+    d.querySelector('.cab').onclick = ()=>{ fechados[b.id] = !fechados[b.id]; d.classList.toggle('fechado'); };
+    anteriorFeito = completo;
+  });
+  box.querySelectorAll('button.op').forEach(bt=>bt.onclick = ()=>responderLeitura(bt.dataset.q, +bt.dataset.k));
+  const resp = Object.keys(S.leitura.resp).length; const acertos = Object.values(S.leitura.resp).filter(r=>r.ok).length;
+  $('barraLeitura').style.width = (resp/TOTAL_PERG*100)+'%';
+  $('txtLeitura').innerHTML = `${resp} de ${TOTAL_PERG} perguntas respondidas · ⭐ ${acertos} acertos · ${blocosFeitos()} de ${BLOCOS.length} barracas`;
+  $('fimLeitura').style.display = S.leitura.concluido ? 'block' : 'none';
+}
+function responderLeitura(qid, k){
+  if(S.leitura.resp[qid]) return;
+  const [bid, qi] = qid.split('_'); const b = BLOCOS.find(x=>x.id===bid); const q = b.qs[+qi];
+  S.leitura.resp[qid] = {esc:k, ok:!!q.o[k].ok, em:new Date().toISOString()};
+  const fimAgora = !S.leitura.concluido && Object.keys(S.leitura.resp).length===TOTAL_PERG;
+  if(fimAgora) concluir('leitura');
+  salvar('leitura'); renderLeitura();
+  if(fimAgora) abrirModal('<div class="trofeu">🏆</div><h2>Leitura concluída!</h2><p>Você passou por todas as barracas. O <b>Mapa Mental</b> foi destravado! ✨</p>', [{t:'🧠 Ir para o Mapa Mental', cls:'btn', fn:()=>ir('mapa')},{t:'Ficar aqui', cls:'btn claro'}]);
+}
+
+// ---------- MAPA MENTAL ----------
+function renderMapa(){
+  const box = $('ramosMapa'); box.innerHTML = '';
+  RAMOS.forEach(r=>{
+    const d = document.createElement('div'); d.className='ramo'; d.style.setProperty('--c', r.cor);
+    let h = `<h4>${r.nome}</h4>`;
+    r.nos.forEach(n=>{
+      if(typeof n==='string'){ h += `<div class="no">• ${n}</div>`; return; }
+      h += '<div class="no">• ' + n.map(p=>{
+        if(typeof p==='string') return p;
+        const st = S.mapa.pecas[p.id];
+        if(st && st.feita) return `<span class="lacuna feita"><span>${p.certa}</span></span>`;
+        const ops = embaralhar([p.certa, p.errada], hashStr(p.id)+SEED_MAPA);
+        return `<span class="lacuna">` + ops.map(o=>`<button data-p="${p.id}" data-v="${o}">${o}</button>`).join('<span style="align-self:center">ou</span>') + `</span>`;
+      }).join('') + '</div>';
+    });
+    d.innerHTML = h; box.appendChild(d);
+  });
+  box.querySelectorAll('.lacuna button').forEach(bt=>bt.onclick = ()=>encaixar(bt));
+  const f = pecasFeitas();
+  $('contadorMapa').textContent = f===TOTAL_PECAS ? '🧠 Mapa completo!' : `🧩 Mapa: ${f} de ${TOTAL_PECAS} peças encaixadas`;
+  $('mapa').classList.toggle('incompleto', f<TOTAL_PECAS);
+  $('mapa').classList.toggle('completo', f===TOTAL_PECAS);
+  $('mapaFim').style.display = f===TOTAL_PECAS ? 'block' : 'none';
+}
+function encaixar(bt){
+  const p = PECAS.find(x=>x.id===bt.dataset.p); const st = S.mapa.pecas[p.id] || {feita:false, tentou:false};
+  if(bt.dataset.v===p.certa){
+    st.feita = true; st.deprimeira = !st.tentou; st.em = new Date().toISOString(); S.mapa.pecas[p.id] = st;
+    const fimAgora = !S.mapa.concluido && pecasFeitas()===TOTAL_PECAS;
+    if(fimAgora) concluir('mapa');
+    salvar('mapa'); renderMapa();
+    if(fimAgora) abrirModal('<div class="trofeu">🧠</div><h2>Mapa completo!</h2><p>Você montou o mapa inteiro. O <b>Verdadeiro ou Falso</b> foi destravado! ✨</p>', [{t:'✅ Jogar Verdadeiro ou Falso', cls:'btn', fn:()=>ir('vf')},{t:'Ver o mapa', cls:'btn claro'}]);
+  } else {
+    st.tentou = true; S.mapa.pecas[p.id] = st; salvar('mapa');
+    bt.classList.remove('erro'); void bt.offsetWidth; bt.classList.add('erro');
+  }
+}
+
+// ---------- VERDADEIRO OU FALSO ----------
+let rodada = null;
+function novaRodada(){ const idx = embaralhar(VF.map((_,i)=>i), (Math.random()*1e9)>>>0).slice(0,12); rodada = {itens:idx, i:0, acertos:0, respondida:null}; renderVF(); }
+function estrelas(pct){ const n = Math.round(pct/20); return '⭐'.repeat(n) + '☆'.repeat(5-n); }
+function renderVF(){
+  const box = $('vfJogo');
+  if(!rodada){
+    box.innerHTML = `<h2>✅ Verdadeiro ou Falso</h2><p>Vou mostrar <b>12 frases</b> sobre a feira. Para cada uma, diga se é <b>Verdadeira</b> ou <b>Falsa</b>. Depois de cada resposta aparece a explicação.</p>
+      ${S.vf.melhor!==null?`<p>🏅 Seu melhor placar: <b>${S.vf.melhor}%</b> ${estrelas(S.vf.melhor)} · rodadas jogadas: ${S.vf.rodadas}</p>`:''}
+      <div style="text-align:center"><button class="btn toldo" id="btVfComecar">▶️ Começar rodada</button></div>`;
+    $('btVfComecar').onclick = novaRodada; return;
+  }
+  if(rodada.i >= rodada.itens.length){
+    const pct = Math.round(rodada.acertos/rodada.itens.length*100);
+    box.innerHTML = `<div class="placar-final"><div class="trofeu">🏆</div><h2>Rodada completa!</h2><p>Você acertou <b>${rodada.acertos} de ${rodada.itens.length}</b> — <b>${pct}%</b></p><p class="estrelas">${estrelas(pct)}</p><p>🏅 Melhor placar: ${S.vf.melhor}%</p>
+      <button class="btn uva" id="btVfDeNovo">🔁 Jogar de novo</button> <button class="btn toldo" id="btVfResumo">🗺️ Agora revise no Resumo!</button></div>`;
+    $('btVfDeNovo').onclick = novaRodada; $('btVfResumo').onclick = ()=>ir('resumo'); return;
+  }
+  const it = VF[rodada.itens[rodada.i]];
+  let h = `<div class="sub">Frase ${rodada.i+1} de ${rodada.itens.length} · ✔️ ${rodada.acertos} acertos</div><div class="barra"><div style="width:${rodada.i/rodada.itens.length*100}%"></div></div>
+    <div class="vf-frase">"${it.f}"</div>`;
+  if(rodada.respondida===null){
+    h += `<div class="vf-bts"><button class="btn" id="btV">👍 Verdadeiro</button><button class="btn toldo" id="btF">👎 Falso</button></div>`;
+    box.innerHTML = h; $('btV').onclick = ()=>responderVF(1); $('btF').onclick = ()=>responderVF(0);
+  } else {
+    const acertou = rodada.respondida===it.v;
+    h += `<div class="fb ${acertou?'ok':'no'}">${acertou?'🎉 Acertou!':'💭 Não foi dessa vez.'} ${it.e}</div><div style="text-align:center;margin-top:10px"><button class="btn uva" id="btVfProx">${rodada.i+1<rodada.itens.length?'➡️ Próxima frase':'🏁 Ver resultado'}</button></div>`;
+    box.innerHTML = h; $('btVfProx').onclick = ()=>{ rodada.i++; rodada.respondida=null; if(rodada.i>=rodada.itens.length) fimRodada(); renderVF(); };
+  }
+}
+function responderVF(v){ const it = VF[rodada.itens[rodada.i]]; rodada.respondida = v; if(v===it.v) rodada.acertos++; renderVF(); }
+function fimRodada(){
+  const pct = Math.round(rodada.acertos/rodada.itens.length*100);
+  S.vf.rodadas = (S.vf.rodadas||0)+1; S.vf.melhor = Math.max(S.vf.melhor||0, pct);
+  S.vf.historico = (S.vf.historico||[]).concat([{pct, em:new Date().toISOString()}]).slice(-20);
+  const primeira = !S.vf.concluido; concluir('vf'); salvar('vf');
+  if(primeira) setTimeout(()=>abrirModal('<div class="trofeu">🗺️</div><h2>Resumo destravado!</h2><p>Agora revise tudo no <b>Resumo</b> antes do Simulado.</p>', [{t:'🗺️ Ir para o Resumo', cls:'btn', fn:()=>ir('resumo')},{t:'Ficar aqui', cls:'btn claro'}]), 200);
+}
+
+// ---------- RESUMO ----------
+function renderResumo(){
+  $('relampago').innerHTML = RELAMPAGO.map((r,i)=>`<button class="op" data-r="${i}">⚡ ${r[0]}</button><div class="resp-oculta" id="rel${i}">👉 ${r[1]}</div>`).join('');
+  document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{ const el=$('rel'+b.dataset.r); el.style.display = el.style.display==='block'?'none':'block'; });
+  atualizarBotaoResumo();
+}
+function medirRolagem(){
+  if(abaAtual!=='resumo') return;
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = h<=0 ? 100 : Math.min(100, Math.round(window.scrollY/h*100));
+  if(pct > (S.resumo.maxRolagem||0)){ S.resumo.maxRolagem = pct; salvar('resumo'); }
+  atualizarBotaoResumo();
+}
+function atualizarBotaoResumo(){
+  const bt = $('btLiResumo'); const pode = S.resumo.concluido || (S.resumo.maxRolagem||0) >= 90;
+  bt.disabled = !pode || S.resumo.concluido;
+  bt.textContent = S.resumo.concluido ? '✅ Resumo lido!' : '✅ Li o resumo até o fim';
+  $('txtLiResumo').textContent = S.resumo.concluido ? 'Concluído em '+dataBR(S.resumo.concluidoEm)+'. O Simulado está aberto!' : (pode ? 'Pode clicar!' : 'O botão acende quando você chegar ao fim da página.');
+}
+function liResumo(){
+  if(S.resumo.concluido) return;
+  concluir('resumo'); salvar('resumo'); atualizarBotaoResumo();
+  abrirModal('<div class="trofeu">📝</div><h2>Simulado destravado!</h2><p>Agora é hora de mostrar o que aprendeu. Boa sorte, jovem aprendiz!</p>', [{t:'📝 Ir para o Simulado', cls:'btn', fn:()=>ir('simulado')},{t:'Revisar mais um pouco', cls:'btn claro'}]);
+}
+
+// ---------- SIMULADO ----------
+function opsSim(qi){ const q = SIM[qi]; const base = q.o.map((o,k)=>({k, t:o[0], ok:o.length===3, w:o.length===3?o[2]:o[1]})); return embaralhar(base, hashStr('sim'+qi)+SEED_SIM); }
+function renderSimulado(){
+  const box = $('questoesSim'); box.innerHTML = '';
+  SIM.forEach((q,qi)=>{
+    const d = document.createElement('div'); d.className = 'card';
+    const r = S.simulado.resp[qi];
+    let h = `<b>Questão ${qi+1}.</b> ${q.q}<div class="opcoes" style="margin-top:8px">`;
+    opsSim(qi).forEach((o,pi)=>{
+      let cls='op'; if(r===o.k) cls+=' sel';
+      if(S.simulado.enviado){ cls='op'+(o.ok?' certa':(r===o.k?' errada':' cinza')); }
+      h += `<button class="${cls}" ${S.simulado.enviado?'disabled':''} data-sq="${qi}" data-k="${o.k}">${LETRAS[pi]}) ${o.t}</button>`;
+    });
+    d.innerHTML = h + '</div>'; box.appendChild(d);
+  });
+  if(!S.simulado.enviado) box.querySelectorAll('[data-sq]').forEach(b=>b.onclick=()=>{ S.simulado.resp[b.dataset.sq] = +b.dataset.k; salvar('simulado'); renderSimulado(); });
+  const n = Object.keys(S.simulado.resp).length;
+  $('barraSim').style.width = (n/SIM.length*100)+'%';
+  $('txtSim').textContent = S.simulado.enviado ? `Enviado em ${dataBR(S.simulado.enviadoEm)}` : `${n} de ${SIM.length} respondidas`;
+  $('envioSim').style.display = S.simulado.enviado ? 'none' : 'block';
+  renderResultado();
+}
+function gerarCodigo(ac){ const L='ABCDEFGHJKLMNPQRSTUVWXYZ'; const r=()=>L[Math.floor(Math.random()*L.length)]; return `SIM-${String(ac).padStart(2,'0')}-${r()}${r()}`; }
+function enviarSim(){
+  const falta = SIM.map((_,i)=>i).filter(i=>S.simulado.resp[i]===undefined);
+  if(falta.length){ abrirModal(`<div class="trofeu">✏️</div><h2>Ainda faltam ${falta.length} questões</h2><p>Responda as questões: <b>${falta.map(i=>i+1).join(', ')}</b>.</p>`); return; }
+  abrirModal('<h2>Enviar o Simulado?</h2><p>Depois de enviar, não dá para mudar as respostas.</p>', [{t:'📨 Enviar', cls:'btn toldo', fn:confirmarEnvio},{t:'Revisar antes', cls:'btn claro'}]);
+}
+function confirmarEnvio(){
+  let ac = 0; SIM.forEach((q,qi)=>{ if(q.o[S.simulado.resp[qi]].length===3) ac++; });
+  S.simulado.acertos = ac; S.simulado.enviado = true; S.simulado.enviadoEm = new Date().toISOString();
+  if(!S.simulado.codigo) S.simulado.codigo = gerarCodigo(ac);
+  concluir('simulado'); salvar('simulado'); renderSimulado();
+  setTimeout(()=>{ const el=$('resultadoSim'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 100);
+}
+function renderResultado(){
+  const box = $('resultadoSim');
+  if(!S.simulado.enviado){ box.innerHTML=''; return; }
+  const ac = S.simulado.acertos; const pct = Math.round(ac/SIM.length*100);
+  let h = `<div class="card placar-final"><div class="trofeu">${pct>=70?'🏆':'💪'}</div><h2>Você acertou ${ac} de ${SIM.length} (${pct}%)</h2><p class="estrelas">${estrelas(pct)}</p>
+    <p>${pct>=70?'Mandou muito bem!':'Continue treinando: releia o Resumo e confira o gabarito abaixo.'}</p>
+    <p>Seu código para os pais: <b style="font-size:1.3em;color:var(--uva2)">${S.simulado.codigo}</b></p></div>
+    <div class="card"><h2>📗 Gabarito comentado</h2><p class="sub">A certa aparece em verde. As outras aparecem em cinza, com a explicação do erro. A sua resposta tem contorno roxo.</p>`;
+  SIM.forEach((q,qi)=>{
+    const r = S.simulado.resp[qi]; const ops = opsSim(qi); const acertou = q.o[r].length===3;
+    h += `<div class="gab-q"><b>${acertou?'✅':'❌'} Questão ${qi+1}.</b> ${q.q}`;
+    ops.forEach((o,pi)=>{ h += `<div class="gab-op ${o.ok?'certa':'cinza'} ${r===o.k?'marcada':''}">${o.ok?'✔️':'✖️'} <b>${LETRAS[pi]}) ${o.t}</b>${r===o.k?' <i>(sua resposta)</i>':''}<br><span>${o.w}</span></div>`; });
+    h += `</div>`;
+  });
+  box.innerHTML = h + '</div>';
+}
+
+// ---------- PAINEL / RELATÓRIO / EXPORTAR ----------
+function atualizarPainel(){
+  const datas = ['leitura','mapa','vf','resumo','simulado'].map(n=>S[n]&&S[n].salvoEm).filter(Boolean).sort();
+  const el = $('painelSalvar'); if(el) el.textContent = datas.length ? `Progresso salvo neste aparelho. Último salvamento: ${dataBR(datas[datas.length-1])}` : 'Seu progresso é salvo sozinho neste aparelho.';
+}
+function abrirRelatorio(){
+  const cod = $('codPais').value.trim().toUpperCase(); const area = $('areaPais');
+  const ehPais = cod===CODIGO_PAIS; const ehSim = S.simulado.codigo && cod===S.simulado.codigo;
+  if(!ehPais && !ehSim){ area.innerHTML = '<p class="fb no">Código não reconhecido. Use o código do Simulado (SIM-…) ou o código da família.</p>'; return; }
+  const resp = Object.values(S.leitura.resp); const lAc = resp.filter(r=>r.ok).length;
+  const errLeit = []; BLOCOS.forEach(b=>b.qs.forEach((q,qi)=>{ const r=S.leitura.resp[b.id+'_'+qi]; if(r && !r.ok) errLeit.push(b.titulo+' – '+q.q); }));
+  const pecasPrim = PECAS.filter(p=>S.mapa.pecas[p.id] && S.mapa.pecas[p.id].feita && S.mapa.pecas[p.id].deprimeira).length;
+  const errSim = S.simulado.enviado ? SIM.map((q,qi)=>q.o[S.simulado.resp[qi]].length===3?null:qi+1).filter(Boolean) : [];
+  let h = `<table class="rel"><tr><th>Material</th><th>Resultado</th></tr>
+   <tr><td>📖 Leitura Estendida</td><td>${resp.length} de ${TOTAL_PERG} respondidas · ${lAc} acertos de primeira${errLeit.length?'<br><span class="sub">Errou: '+errLeit.join('; ')+'</span>':''}</td></tr>
+   <tr><td>🧠 Mapa Mental</td><td>${pecasFeitas()} de ${TOTAL_PECAS} peças encaixadas · <b>Mapa Mental: ${pecasPrim} de ${TOTAL_PECAS} peças encaixadas de primeira</b></td></tr>
+   <tr><td>✅ Verdadeiro ou Falso</td><td>${S.vf.melhor!==null?'Melhor placar: '+S.vf.melhor+'% · rodadas: '+S.vf.rodadas:'Ainda não jogou'}</td></tr>
+   <tr><td>🗺️ Resumo</td><td>Rolagem máxima: ${S.resumo.maxRolagem||0}% · ${S.resumo.concluido?'marcou "li até o fim"':'não marcou "li até o fim"'}</td></tr>
+   <tr><td>📝 Simulado</td><td>${S.simulado.enviado?`${S.simulado.acertos} de ${SIM.length} (${Math.round(S.simulado.acertos/SIM.length*100)}%) · código ${S.simulado.codigo}${errSim.length?'<br><span class="sub">Errou as questões: '+errSim.join(', ')+'</span>':''}`:'Ainda não enviado'}</td></tr>
+   <tr><td>🛤️ Trilha</td><td>${ETAPAS.map(e=>`${e.ic} ${e.nome}: ${feito(e.id)?'✅ concluída em '+dataBR(S[e.id].concluidoEm):'⏳ não concluída'}`).join('<br>')}
+     <br>${S.trilha.liberadoPelosPais?'🔓 Trilha liberada pelos pais em '+dataBR(S.trilha.liberadoEm):'🔒 Trilha não liberada pelos pais'}
+     ${S.trilha.historico.length?'<br><span class="sub">Histórico: '+S.trilha.historico.map(x=>x.acao+' em '+dataBR(x.em)).join('; ')+'</span>':''}</td></tr></table>`;
+  if(ehPais){
+    h += S.trilha.liberadoPelosPais
+      ? `<p class="caixa">🔓 <b>Trilha liberada pelos pais</b></p><button class="btn claro" id="btTrancar">🔒 Trancar de novo</button>`
+      : `<button class="btn uva" id="btLiberar">🔓 Liberar todos os materiais</button>`;
+  }
+  area.innerHTML = h;
+  if($('btLiberar')) $('btLiberar').onclick = ()=>{ S.trilha.liberadoPelosPais=true; S.trilha.liberadoEm=new Date().toISOString(); S.trilha.historico.push({acao:'liberou', em:S.trilha.liberadoEm}); gravar(K.trilha,S.trilha); renderTrilha(); abrirRelatorio(); };
+  if($('btTrancar')) $('btTrancar').onclick = ()=>{ S.trilha.liberadoPelosPais=false; S.trilha.historico.push({acao:'trancou de novo', em:new Date().toISOString()}); gravar(K.trilha,S.trilha); renderTrilha(); abrirRelatorio(); };
+}
+function exportar(){
+  const dados = {kit:SLUG, titulo:'Feira das Medidas — Matemática 5º ano', exportadoEm:new Date().toISOString(), leitura:S.leitura, mapa:S.mapa, vf:S.vf, resumo:S.resumo, simulado:S.simulado, trilha:S.trilha};
+  const blob = new Blob([JSON.stringify(dados,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'progresso_feira_das_medidas.json'; document.body.appendChild(a); a.click(); a.remove();
+}
+function importar(arq){
+  const fr = new FileReader();
+  fr.onload = ()=>{ try{ const d = JSON.parse(fr.result); if(d.kit!==SLUG) throw 0;
+      ['leitura','mapa','vf','resumo','simulado','trilha'].forEach(n=>{ if(d[n]) gravar(K[n], d[n]); });
+      carregar(); renderTudo(); abrirModal('<h2>📤 Progresso importado!</h2>');
+    }catch(e){ abrirModal('<h2>Arquivo não reconhecido</h2><p>Escolha o arquivo exportado deste kit.</p>'); } };
+  fr.readAsText(arq);
+}
+function zerarTudo(){
+  abrirModal('<h2>🗑️ Zerar tudo?</h2><p>Todo o progresso deste kit será apagado neste aparelho.</p>', [{t:'Sim, zerar', cls:'btn toldo', fn:()=>{ Object.values(K).forEach(apagar); carregar(); rodada=null; renderTudo(); ir('inicio'); }},{t:'Cancelar', cls:'btn claro'}]);
+}
+
+function renderTudo(){ renderLeitura(); renderMapa(); renderVF(); renderResumo(); renderSimulado(); atualizarPainel(); renderTrilha(); }
+function iniciar(){
+  carregar(); renderTudo();
+  $('btExportar').onclick = exportar; $('btImportar').onclick = ()=>$('arqImportar').click();
+  $('arqImportar').onchange = e=>{ if(e.target.files[0]) importar(e.target.files[0]); e.target.value=''; };
+  $('btZerar').onclick = zerarTudo; $('btRelatorio').onclick = abrirRelatorio;
+  $('codPais').addEventListener('keydown', e=>{ if(e.key==='Enter') abrirRelatorio(); });
+  $('btLiResumo').onclick = liResumo; $('btEnviarSim').onclick = enviarSim;
+  window.addEventListener('scroll', ()=>{ if(abaAtual==='resumo') medirRolagem(); }, {passive:true});
+  window.addEventListener('hashchange', ()=>{ const h = location.hash.replace('#',''); if(h) ir(h); });
+  const h0 = location.hash.replace('#',''); ir(h0 || 'inicio');
+}
+iniciar();
+</script>
+</body>
+</html>
